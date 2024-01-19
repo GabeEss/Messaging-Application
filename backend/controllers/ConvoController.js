@@ -11,32 +11,27 @@ exports.convo_detail = asyncHandler(async (req, res, next) => {
   res.send(`NOT IMPLEMENTED: Convo detail: ${req.params.id}`);
 });
 
-// Display convo create form on GET.
-exports.convo_create_get = asyncHandler(async (req, res, next) => {
-  res.send("NOT IMPLEMENTED: Convo create GET");
-});
-
 // Handle convo create on POST.
 exports.convo_create_post = asyncHandler(async (req, res, next) => {
   res.send("NOT IMPLEMENTED: Convo create POST");
 });
 
-// Display convo delete form on GET.
-exports.convo_delete_get = asyncHandler(async (req, res, next) => {
-  res.send("NOT IMPLEMENTED: Convo delete GET");
+// Handle convo delete on DELETE.
+exports.convo_delete = asyncHandler(async (req, res, next) => {
+  res.send("NOT IMPLEMENTED: Convo DELETE");
 });
 
-// Handle convo delete on POST.
-exports.convo_delete_post = asyncHandler(async (req, res, next) => {
-  res.send("NOT IMPLEMENTED: Convo delete POST");
+// Handle convo update on PUT.
+exports.convo_title_update = asyncHandler(async (req, res, next) => {
+  res.send("NOT IMPLEMENTED: Convo update PUT");
 });
 
-// Display convo update form on GET.
-exports.convo_update_get = asyncHandler(async (req, res, next) => {
-  res.send("NOT IMPLEMENTED: Convo update GET");
+// Handle convo user add on PUT.
+exports.convo_user_add = asyncHandler(async (req, res, next) => {
+  res.send("NOT IMPLEMENTED: Convo user add PUT");
 });
 
-// Handle convo update on POST.
-exports.convo_update_post = asyncHandler(async (req, res, next) => {
-  res.send("NOT IMPLEMENTED: Convo update POST");
+// Handle convo user remove on PUT.
+exports.convo_user_remove = asyncHandler(async (req, res, next) => {
+  res.send("NOT IMPLEMENTED: Convo user remove PUT");
 });
