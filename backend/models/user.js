@@ -8,7 +8,7 @@ const UserSchema = new Schema({
         required: true,
         maxLength: 64
     },
-    friends: [{ type: Types.ObjectId, ref: "User" }],
+    friends: [{ type: Schema.Types.ObjectId, ref: "User" }],
     status: {
         type: String,
         required: true,
