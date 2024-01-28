@@ -6,13 +6,12 @@ import HomePage from './pages/HomePage';
 function App() {
   return(
     <Router>
-      <Sidebar>
-        <MainDisplay>
-          <Routes>
-            <Route path="/" element={<HomePage/>}/>
-          </Routes>
-        </MainDisplay>
-      </Sidebar>
+      <Sidebar />
+      <MainDisplay>
+        <Routes>
+          <Route path="/" element={<HomePage/>}/>
+        </Routes>
+      </MainDisplay>
     </Router>
   );
 }
