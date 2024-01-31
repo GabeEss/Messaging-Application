@@ -5,8 +5,9 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var cors = require('cors');
+const {expressjwt: jwt} = require('express-jwt');
+const jwks = require('jwks-rsa');
 const mongoose = require("mongoose");
-const { auth } = require('express-openid-connect');
 
 var indexRouter = require('./routes/index');
 
@@ -28,22 +29,25 @@ async function main() {
   });
 }
 
-app.use(cors({
-  origin: true,
-  credentials: true,
-}));
+app.use(cors());
 
-const config = {
-  authRequired: false,
-  auth0Logout: true,
-  secret: process.env.AUTH_SECRET,
-  baseURL: 'http://localhost:3000',
-  clientID: process.env.AUTH_CLIENT_ID,
-  issuerBaseURL: process.env.AUTH_ISSUER_BASE_URL,
-};
+const verifyJwt = jwt({
+  secret: jwks.expressJwtSecret({
+    cache: true,
+    rateLimit: true,
+    jwksRequestsPerMinute: 5,
+    jwksUri: process.env.AUTH_DOMAIN,
+  }),
+  audience: process.env.AUTH_AUDIENCE,
+  issuer: process.env.AUTH_ISSUER,
+  algorithms: ['RS256'],
+}).unless({ path: ['/'] });
 
-// auth router attaches /login, /logout, and /callback routes to the baseURL
-app.use(auth(config));
+app.use((req, res, next) => {
+  verifyJwt(req, res, (err) => {
+    next();
+  });
+});
 
 app.use(logger('dev'));
 app.use(express.json());
