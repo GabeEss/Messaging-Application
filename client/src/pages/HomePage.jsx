@@ -2,13 +2,13 @@ import { useAuth0 } from '@auth0/auth0-react';
 import axios from 'axios';
 
 function HomePage() {
-
     const {
         loginWithPopup,
         loginWithRedirect,
         logout,
         isAuthenticated,
         user,
+        getAccessTokenSilently
     } = useAuth0();
 
     const callApi = () => {
@@ -21,14 +21,20 @@ function HomePage() {
             });
     }
     
-    const callProtectedApi = () => {
-        axios.get('http://localhost:3000/protected')
-            .then((res) => {
-                console.log(res.data);
-            })
-            .catch((err) => {
-                console.log(err);
+    const callProtectedApi = async () => {
+        try {
+            const token = await getAccessTokenSilently({
+                scope: "read:convos write:convos"
             });
+            const response = await axios.get('http://localhost:3000/protected', {
+            headers: {
+                authorization: `Bearer ${token}`
+            }
+            });
+            console.log(response.data);
+        } catch (error) {
+            console.log(error.message);
+        }
     }
 
   return (
