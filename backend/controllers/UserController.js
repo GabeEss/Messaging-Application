@@ -1,5 +1,5 @@
 const User = require("../models/user");
-const jwt = require('jsonwebtoken');
+const axios = require('axios');
 const asyncHandler = require("express-async-handler");
 
 exports.index = asyncHandler(async(req, res, next) => {
@@ -24,15 +24,19 @@ exports.user_create_post = asyncHandler(async (req, res, next) => {
         throw new Error('Invalid authorization header');
     }
     const accessToken = authHeader.split(" ")[1];
-    const decodedToken = jwt.decode(accessToken);
-    const userId = decodedToken.sub;
-    const username = decodedToken.nickname;
+    const response = await axios.get(process.env.AUTH_ISSUER + "/userinfo", {
+        headers: {
+            Authorization: `Bearer ${accessToken}`,
+        },
+    });
+    const userInfo = response.data;
+    const userId = userInfo.sub;
+    const username = userInfo.nickname;
 
     const userExists = await User.findOne({ auth0id: userId }).exec();
 
     if(userExists) {
-      res.status(409).send('User already registered');
-      return;
+      return res.status(409).json({success: false, message: 'User already exists'}); 
     }
 
     const newUser = new User({ 
@@ -41,11 +45,10 @@ exports.user_create_post = asyncHandler(async (req, res, next) => {
       friends: [],
      });
     await newUser.save();
-
-    res.status(201).send('User registered successfully');
+    return res.status(201).json({ success: true, message: 'User registered successfully' })
     } catch (error) {
         console.log('Error:', error.message);
-        res.status(500).send('Error registering user');
+        return res.status(500).json({success: false, message: 'Error registering user'});
     }
   });
 
