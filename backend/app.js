@@ -45,6 +45,9 @@ const verifyJwt = jwt({
 
 app.use((req, res, next) => {
   verifyJwt(req, res, (err) => {
+    if (err && err.name === 'TokenExpiredError') {
+      return res.status(401).send('Token expired');
+    }
     next();
   });
 });
