@@ -37,6 +37,39 @@ function HomePage() {
         }
     }
 
+    // Need 
+    const popupAndRegister = () => {
+        loginWithPopup().then(() => {
+            console.log('logged in');
+        }).then(async () => {
+            try {
+                const token = await getAccessTokenSilently({
+                    scope: "read:convos write:convos"
+                });
+                const response = await axios.post('http://localhost:3000/user/register', {}, {
+                    headers: {
+                        authorization: `Bearer ${token}`
+                    }
+                });
+                if (response.data.success === true) {
+                    console.log('User registered');
+                }
+            } catch (error) {
+                if (error.response && error.response.status === 409) {
+                    console.log(error.response.data.message);
+                } else {
+                    console.log(error.message);
+                }
+            }
+        }).catch((error) => {
+            console.error('error', error);
+        });
+    }
+
+    const redirectAndRegister = () => {
+        loginWithRedirect(); 
+    }
+
   return (
     <div>
       <h1>Welcome to Messaging Application!</h1>
@@ -55,8 +88,8 @@ function HomePage() {
             </>
             ) : (
             <div>
-                <button onClick={loginWithPopup}>Login / Signup with Popup</button>
-                <button onClick={loginWithRedirect}>Login / Signup with Redirect</button>
+                <button onClick={popupAndRegister}>Login / Signup with Popup</button>
+                <button onClick={redirectAndRegister}>Login / Signup with Redirect</button>
             </div>
         ) }
       </div>
