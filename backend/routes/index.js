@@ -56,6 +56,7 @@ router.get("/messages", message_controller.message_list);
 /// USER ROUTES ///
 
 router.get("/users", user_controller.user_list);
+router.get("/user/getid", user_controller.user_id_get);
 router.get("/user/:id", user_controller.user_detail);
 router.get("/user/:id/friends", user_controller.user_friends_get);
 router.put("/user/:id/friends/add", user_controller.user_friend_add);

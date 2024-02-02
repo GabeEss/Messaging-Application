@@ -12,6 +12,28 @@ exports.user_list = asyncHandler(async (req, res, next) => {
   res.send("NOT IMPLEMENTED: User list");
 });
 
+exports.user_id_get = asyncHandler(async (req, res, next) => {
+  try {
+    const {userId, username} = await getUserInfo(req.headers.authorization);
+
+    if (typeof userId !== 'string' || typeof username !== 'string') {
+      return res.status(401).json({success: false, message: 'Unauthorized'});
+    }
+
+    const user = await User.findOne({ auth0id: userId }).exec();
+
+    if(!user) {
+      return res.status(404).json({success: false, message: 'User ID not found in database'});
+    }
+
+    return res.status(200).json({success: true, id: user._id});
+
+  } catch (error) {
+    console.log('Error:', error.message);
+    return res.status(500).json({success: false, message: 'Error getting user id'});
+  }
+});
+
 // Display detail page for a specific user.
 exports.user_detail = asyncHandler(async (req, res, next) => {
   res.send(`NOT IMPLEMENTED: User detail: ${req.params.id}`);
@@ -23,13 +45,16 @@ exports.user_create_post = asyncHandler(async (req, res, next) => {
     const {userId, username} = await getUserInfo(req.headers.authorization);
 
     if (typeof userId !== 'string' || typeof username !== 'string') {
-      throw new TypeError('userId and username must be strings');
+      return res.status(401).json({success: false, message: 'Unauthorized'});
     }
 
     const userExists = await User.findOne({ auth0id: userId }).exec();
 
     if(userExists) {
-      return res.status(409).json({success: false, message: 'User already exists'}); 
+      return res.status(409).json({
+        success: false,
+        message: 'User already exists',
+      }); 
     }
 
     const newUser = new User({ 
@@ -38,7 +63,10 @@ exports.user_create_post = asyncHandler(async (req, res, next) => {
       friends: [],
      });
     await newUser.save();
-    return res.status(201).json({ success: true, message: 'User registered successfully' })
+    return res.status(201).json({
+      success: true,
+      message: 'User registered successfully',
+    })
     } catch (error) {
         console.log('Error:', error.message);
         return res.status(500).json({success: false, message: 'Error registering user'});
@@ -60,10 +88,21 @@ exports.user_delete = asyncHandler(async (req, res, next) => {
     res.send("NOT IMPLEMENTED: User DELETE");
 });
 
-
 // Handle display user friends on GET.
 exports.user_friends_get = asyncHandler(async (req, res, next) => {
-  res.send("NOT IMPLEMENTED: User friends GET");
+    const {userId, username} = await getUserInfo(req.headers.authorization);
+
+    if (typeof userId !== 'string' || typeof username !== 'string') {
+      return res.status(401).json({success: false, message: 'Unauthorized'});
+    }
+
+    const user = await User.findOne({ auth0id: userId }).exec();
+
+    if(!user) {
+      return res.status(404).json({success: false, message: 'User not found'});
+    }
+
+    return res.status(200).json({success: true, friends: user.friends});
 });
 
 // Handle add user friend on PUT.
