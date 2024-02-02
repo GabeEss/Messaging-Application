@@ -1,10 +1,10 @@
 import { useAuth0 } from '@auth0/auth0-react';
+import { makeAuthenticatedRequest } from '../utils/makeAuthRequest';
 import axios from 'axios';
 
 function HomePage() {
     const {
         loginWithPopup,
-        loginWithRedirect,
         logout,
         isAuthenticated,
         user,
@@ -23,34 +23,27 @@ function HomePage() {
     
     const callProtectedApi = async () => {
         try {
-            const token = await getAccessTokenSilently({
-                scope: "read:convos write:convos"
-            });
-            const response = await axios.get('http://localhost:3000/protected', {
-            headers: {
-                authorization: `Bearer ${token}`
-            }
-            });
+            const response = await makeAuthenticatedRequest(
+                getAccessTokenSilently,
+                'get',
+                'http://localhost:3000/protected'
+            );
             console.log(response.data);
         } catch (error) {
             console.log(error.message);
         }
     }
 
-    // Need 
     const popupAndRegister = () => {
         loginWithPopup().then(() => {
             console.log('logged in');
         }).then(async () => {
             try {
-                const token = await getAccessTokenSilently({
-                    scope: "read:convos write:convos"
-                });
-                const response = await axios.post('http://localhost:3000/user/register', {}, {
-                    headers: {
-                        authorization: `Bearer ${token}`
-                    }
-                });
+                const response = await makeAuthenticatedRequest(
+                    getAccessTokenSilently,
+                    'post',
+                    'http://localhost:3000/user/register'
+                );
                 if (response.data.success === true) {
                     console.log('User registered');
                 }
@@ -64,10 +57,6 @@ function HomePage() {
         }).catch((error) => {
             console.error('error', error);
         });
-    }
-
-    const redirectAndRegister = () => {
-        loginWithRedirect(); 
     }
 
   return (
@@ -89,7 +78,8 @@ function HomePage() {
             ) : (
             <div>
                 <button onClick={popupAndRegister}>Login / Signup with Popup</button>
-                <button onClick={redirectAndRegister}>Login / Signup with Redirect</button>
+                <button>Friends List</button>
+                <button>Conversations</button>
             </div>
         ) }
       </div>
