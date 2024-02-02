@@ -12,7 +12,7 @@ function HomePage() {
     } = useAuth0();
 
     const callApi = () => {
-        axios.get('http://localhost:3000/')
+        axios.get(`${import.meta.env.VITE_API_URL}`)
             .then((res) => {
                 console.log(res.data);
             })
@@ -26,7 +26,7 @@ function HomePage() {
             const response = await makeAuthenticatedRequest(
                 getAccessTokenSilently,
                 'get',
-                'http://localhost:3000/protected'
+                `${import.meta.env.VITE_API_URL}/protected`
             );
             console.log(response.data);
         } catch (error) {
@@ -42,7 +42,7 @@ function HomePage() {
                 const response = await makeAuthenticatedRequest(
                     getAccessTokenSilently,
                     'post',
-                    'http://localhost:3000/user/register'
+                    `${import.meta.env.VITE_API_URL}/user/register`
                 );
                 if (response.data.success === true) {
                     console.log('User registered');
