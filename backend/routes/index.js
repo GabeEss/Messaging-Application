@@ -56,14 +56,13 @@ router.get("/messages", message_controller.message_list);
 /// USER ROUTES ///
 
 router.get("/users", user_controller.user_list);
-router.get("/user/getid", user_controller.user_id_get);
-router.get("/user/:id", user_controller.user_detail);
-router.get("/user/:id/friends", user_controller.user_friends_get);
-router.put("/user/:id/friends/add", user_controller.user_friend_add);
-router.put("/user/:id/friends/remove", user_controller.user_friend_remove);
-router.put("/user/:id", user_controller.user_update);
+router.get("/user", user_controller.user_detail);
+router.get("/user/friends", user_controller.user_friends_get);
+router.put("/user/friends/add", user_controller.user_friend_add);
+router.put("/user/friends/remove", user_controller.user_friend_remove);
+router.put("/user", user_controller.user_update);
 router.post("/user/register", user_controller.user_create_post);
 router.post("/user/password/change", user_controller.user_password_change_post);
-router.delete("/user/:id", user_controller.user_delete);
+router.delete("/user", user_controller.user_delete);
 
 module.exports = router;

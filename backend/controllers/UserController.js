@@ -12,28 +12,6 @@ exports.user_list = asyncHandler(async (req, res, next) => {
   res.send("NOT IMPLEMENTED: User list");
 });
 
-exports.user_id_get = asyncHandler(async (req, res, next) => {
-  try {
-    const {userId, username} = await getUserInfo(req.headers.authorization);
-
-    if (typeof userId !== 'string' || typeof username !== 'string') {
-      return res.status(401).json({success: false, message: 'Unauthorized'});
-    }
-
-    const user = await User.findOne({ auth0id: userId }).exec();
-
-    if(!user) {
-      return res.status(404).json({success: false, message: 'User ID not found in database'});
-    }
-
-    return res.status(200).json({success: true, id: user._id});
-
-  } catch (error) {
-    console.log('Error:', error.message);
-    return res.status(500).json({success: false, message: 'Error getting user id'});
-  }
-});
-
 // Display detail page for a specific user.
 exports.user_detail = asyncHandler(async (req, res, next) => {
   res.send(`NOT IMPLEMENTED: User detail: ${req.params.id}`);
