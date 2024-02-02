@@ -1,12 +1,10 @@
 import { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
 import { makeAuthenticatedRequest } from "../utils/makeAuthRequest";
 import { useAuth0 } from '@auth0/auth0-react';
 
 function FriendPage() {
     const [friends, setFriends] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
-    const { id } = useParams();
 
     const {
         isAuthenticated,
@@ -29,7 +27,7 @@ function FriendPage() {
                 const response = await makeAuthenticatedRequest(
                     getAccessTokenSilently,
                     'get',
-                    `${import.meta.env.VITE_API_URL}/user/${id}/friends`
+                    `${import.meta.env.VITE_API_URL}/user/friends`
                 );
                 if(response.data.success === true) {
                     setFriends(response.data.friends);

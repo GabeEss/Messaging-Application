@@ -11,7 +11,7 @@ function App() {
       <MainDisplay>
         <Routes>
           <Route path="/" element={<HomePage/>}/>
-          <Route path="/user/:id/friends" element={<FriendPage/>}/>
+          <Route path="/user/friends" element={<FriendPage/>}/>
         </Routes>
       </MainDisplay>
     </Router>

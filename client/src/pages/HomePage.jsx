@@ -64,25 +64,7 @@ function HomePage() {
     }
 
     const goToFriends = async () => {
-        if (isAuthenticated) {
-            try {
-                const response = await makeAuthenticatedRequest(
-                    getAccessTokenSilently,
-                    'get',
-                    `${import.meta.env.VITE_API_URL}/user/getid`
-                );
-                if (response.data.success === true) {
-                    const id = response.data.id;
-                    navigate(`/user/${id}/friends`);
-                }
-            } catch (error) {
-                if (error.response && error.response.status === 409) {
-                    console.log(error.response.data.message);
-                } else {
-                    console.log(error.message);
-                }
-            }
-        }
+        navigate('/user/friends');
     }
 
   return (
