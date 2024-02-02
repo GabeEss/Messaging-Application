@@ -1,6 +1,7 @@
 const User = require("../models/user");
 const axios = require('axios');
 const asyncHandler = require("express-async-handler");
+const getUserInfo = require("../utils/getUserInfo");
 
 exports.index = asyncHandler(async(req, res, next) => {
     res.send("NOT IMPLEMENTED: Home");
@@ -19,19 +20,11 @@ exports.user_detail = asyncHandler(async (req, res, next) => {
 // Handle user create on POST.
 exports.user_create_post = asyncHandler(async (req, res, next) => {
   try {
-    const authHeader = req.headers.authorization;
-    if (!authHeader || !authHeader.includes(' ')) {
-        throw new Error('Invalid authorization header');
+    const {userId, username} = await getUserInfo(req.headers.authorization);
+
+    if (typeof userId !== 'string' || typeof username !== 'string') {
+      throw new TypeError('userId and username must be strings');
     }
-    const accessToken = authHeader.split(" ")[1];
-    const response = await axios.get(process.env.AUTH_ISSUER + "/userinfo", {
-        headers: {
-            Authorization: `Bearer ${accessToken}`,
-        },
-    });
-    const userInfo = response.data;
-    const userId = userInfo.sub;
-    const username = userInfo.nickname;
 
     const userExists = await User.findOne({ auth0id: userId }).exec();
 
