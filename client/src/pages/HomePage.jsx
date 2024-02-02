@@ -1,5 +1,7 @@
+import { useNavigate } from 'react-router-dom';
 import { useAuth0 } from '@auth0/auth0-react';
 import { makeAuthenticatedRequest } from '../utils/makeAuthRequest';
+// import { Link } from 'react-router-dom';
 import axios from 'axios';
 
 function HomePage() {
@@ -10,6 +12,8 @@ function HomePage() {
         user,
         getAccessTokenSilently
     } = useAuth0();
+
+    const navigate = useNavigate();
 
     const callApi = () => {
         axios.get(`${import.meta.env.VITE_API_URL}`)
@@ -59,6 +63,28 @@ function HomePage() {
         });
     }
 
+    const goToFriends = async () => {
+        if (isAuthenticated) {
+            try {
+                const response = await makeAuthenticatedRequest(
+                    getAccessTokenSilently,
+                    'get',
+                    `${import.meta.env.VITE_API_URL}/user/getid`
+                );
+                if (response.data.success === true) {
+                    const id = response.data.id;
+                    navigate(`/user/${id}/friends`);
+                }
+            } catch (error) {
+                if (error.response && error.response.status === 409) {
+                    console.log(error.response.data.message);
+                } else {
+                    console.log(error.message);
+                }
+            }
+        }
+    }
+
   return (
     <div>
       <h1>Welcome to Messaging Application!</h1>
@@ -74,12 +100,12 @@ function HomePage() {
                 <h2>{user.name}</h2>
                 <p>{user.email}</p>
                 </div>
+                <button onClick={goToFriends}>Friends List</button>
+                <button>Conversations</button>
             </>
             ) : (
             <div>
                 <button onClick={popupAndRegister}>Login / Signup with Popup</button>
-                <button>Friends List</button>
-                <button>Conversations</button>
             </div>
         ) }
       </div>
