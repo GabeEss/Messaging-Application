@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { makeAuthenticatedRequest } from "../utils/makeAuthRequest";
 import { useAuth0 } from '@auth0/auth0-react';
 
 function FriendPage() {
     const [friends, setFriends] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
+    const navigate = useNavigate();
 
     const {
         isAuthenticated,
@@ -38,6 +40,10 @@ function FriendPage() {
         }
     }
 
+    const handleFriend = async () => {
+        navigate('/friend-form');
+    }
+
     if(isLoading) return (<p>Loading...</p>);
 
     return (
@@ -54,6 +60,9 @@ function FriendPage() {
                     )
                 })
             }
+            </div>
+            <div>
+                <button onClick={handleFriend}>Add/Remove Friend</button>
             </div>
         </div>
     )

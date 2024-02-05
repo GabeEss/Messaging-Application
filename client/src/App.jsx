@@ -3,6 +3,7 @@ import Sidebar from './components/SideBar';
 import MainDisplay from './components/MainDisplay';
 import HomePage from './pages/HomePage';
 import FriendPage from './pages/FriendPage';
+import FriendForm from './pages/FriendFormPage';
 
 function App() {
   return(
@@ -12,6 +13,7 @@ function App() {
         <Routes>
           <Route path="/" element={<HomePage/>}/>
           <Route path="/user/friends" element={<FriendPage/>}/>
+          <Route path="/friend-form" element={<FriendForm/>}/>
         </Routes>
       </MainDisplay>
     </Router>
