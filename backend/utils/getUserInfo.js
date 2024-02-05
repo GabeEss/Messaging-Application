@@ -16,6 +16,7 @@ const getUserInfo = async (authHeader) => {
     const userInfo = response.data; // Auth0 user info
     const userId = userInfo.sub; // Auth0 user id
     const username = userInfo.nickname; // Auth0 username
+    const userEmail = userInfo.email; // Auth0 user email
 
     if (typeof userId !== 'string' || typeof username !== 'string') {
         return res.status(401).json({success: false, message: 'Unauthorized'});
@@ -23,10 +24,22 @@ const getUserInfo = async (authHeader) => {
 
     const user = await User.findOne({ auth0id: userId }).exec(); // MongoDB user
 
-    return {
-        userId: userId,
-        username: username,
-        mongoUser: user,
+    if(!user) {
+        // User not found in MongoDB
+        return {
+            userId: userId,
+            username: username,
+            mongoUser: null,
+            userEmail: userEmail,
+        }
+    } else {
+        // User found in MongoDB
+        return {
+            userId: userId,
+            username: username,
+            mongoUser: user,
+            userEmail: userEmail,
+        }
     }
 }
 

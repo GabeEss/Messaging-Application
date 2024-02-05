@@ -19,9 +19,9 @@ exports.user_detail = asyncHandler(async (req, res, next) => {
 // Handle user create on POST.
 exports.user_create_post = asyncHandler(async (req, res, next) => {
   try {
-      const {userId, username, mongoUser} = await getUserInfo(req.headers.authorization);
+      console.log("Creating user");
+      const {userId, username, mongoUser, userEmail} = await getUserInfo(req.headers.authorization);
 
-      // If user is a MongoDB user, return 409
       if(mongoUser) {
         return res.status(409).json({
           success: false,
@@ -29,15 +29,15 @@ exports.user_create_post = asyncHandler(async (req, res, next) => {
         }); 
       }
 
-      // Create new user in MongoDB from Auth0 user info
       const newUser = new User({ 
         auth0id: userId,
         username: username,
+        email: userEmail,
         friends: [],
       });
 
       await newUser.save();
-      
+
       return res.status(201).json({
         success: true,
         message: 'User registered successfully',
@@ -65,7 +65,7 @@ exports.user_delete = asyncHandler(async (req, res, next) => {
 
 // Handle display user friends on GET.
 exports.user_friends_get = asyncHandler(async (req, res, next) => {
-    const {mongoUser} = await getUserInfo(req.headers.authorization); // Get MongoDB user
+    const {mongoUser} = await getUserInfo(req.headers.authorization);
 
     if(!mongoUser) {
       return res.status(404).json({success: false, message: 'User not found'});
@@ -76,10 +76,50 @@ exports.user_friends_get = asyncHandler(async (req, res, next) => {
 
 // Handle add user friend on PUT.
 exports.user_friend_add = asyncHandler(async (req, res, next) => {
-    res.send("NOT IMPLEMENTED: User friend add PUT");
+    const {mongoUser} = await getUserInfo(req.headers.authorization);
+
+    if(!mongoUser) {
+      return res.status(404).json({success: false, message: 'User not found'});
+    }
+
+    const friendEmail = req.body.username;
+
+    const friend = await User.findOne({email: friendEmail}).exec();
+
+    if(!friend) {
+      return res.status(404).json({success: false, message: 'Friend not found'});
+    }
+
+    mongoUser.friends.push(friend._id);
+    friend.friends.push(mongoUser._id);
+
+    await mongoUser.save();
+    await friend.save();
+
+    return res.status(200).json({success: true, message: 'Friend added successfully'});
 });
 
 // Handle remove user friend on PUT.
 exports.user_friend_remove = asyncHandler(async (req, res, next) => {
-    res.send("NOT IMPLEMENTED: User friend remove PUT");
+    const {mongoUser} = await getUserInfo(req.headers.authorization);
+
+    if(!mongoUser) {
+      return res.status(404).json({success: false, message: 'User not found'});
+    }
+
+    const friendEmail = req.body.username;
+
+    const friend = await User.findOne({email: friendEmail}).exec();
+
+    if(!friend) {
+      return res.status(404).json({success: false, message: 'Friend not found'});
+    }
+
+    mongoUser.friends.pull(friend._id);
+    friend.friends.pull(mongoUser._id);
+
+    await mongoUser.save();
+    await friend.save();
+
+    return res.status(200).json({success: true, message: 'Friend removed successfully'});
 });

@@ -14,6 +14,12 @@ const UserSchema = new Schema({
         required: true,
         maxLength: 64
     },
+    email: {
+        type: String,
+        required: true,
+        unique: true,
+        maxLength: 64
+    },
     friends: [{ type: Schema.Types.ObjectId, ref: "User" }],
 })
 
