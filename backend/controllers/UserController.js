@@ -71,7 +71,10 @@ exports.user_friends_get = asyncHandler(async (req, res, next) => {
       return res.status(404).json({success: false, message: 'User not found'});
     }
 
-    return res.status(200).json({success: true, friends: mongoUser.friends});
+    // Find user friends
+    const friends = await User.find({ _id: { $in: mongoUser.friends } }).select('username').exec();
+
+    return res.status(200).json({success: true, friends: friends});
 });
 
 // Handle add user friend on PUT.
@@ -88,6 +91,14 @@ exports.user_friend_add = asyncHandler(async (req, res, next) => {
 
     if(!friend) {
       return res.status(404).json({success: false, message: 'Friend not found'});
+    }
+
+    if(friendEmail === mongoUser.email) {
+      return res.status(409).json({success: false, message: 'Cannot add yourself as a friend'});
+    }
+
+    if(mongoUser.friends.some(f => f.toString() === friend._id.toString())) {
+      return res.status(409).json({success: false, message: 'Friend already exists'});
     }
 
     mongoUser.friends.push(friend._id);
@@ -115,11 +126,15 @@ exports.user_friend_remove = asyncHandler(async (req, res, next) => {
       return res.status(404).json({success: false, message: 'Friend not found'});
     }
 
-    mongoUser.friends.pull(friend._id);
-    friend.friends.pull(mongoUser._id);
+    if(mongoUser.friends.some(f => f.toString() === friend._id.toString())) {
+      mongoUser.friends.pull(friend._id);
+      friend.friends.pull(mongoUser._id);
 
-    await mongoUser.save();
-    await friend.save();
+      await mongoUser.save();
+      await friend.save();
 
-    return res.status(200).json({success: true, message: 'Friend removed successfully'});
+      return res.status(200).json({success: true, message: 'Friend removed successfully'});
+    } else {
+      return res.status(409).json({success: false, message: 'This user is not a friend'});
+    }
 });
