@@ -33,6 +33,7 @@ function FriendPage() {
                 );
                 if(response.data.success === true) {
                     setFriends(response.data.friends);
+                    
                 }
             } catch (error) {
                 console.log(error.message);
@@ -54,7 +55,7 @@ function FriendPage() {
                 friends && friends.length === 0 ? <p>No friends found</p> 
                 : friends.map((friend) => {
                     return (
-                        <div key={friend.id}>
+                        <div key={friend._id}>
                         <p>{friend.username}</p>
                         </div>
                     )
