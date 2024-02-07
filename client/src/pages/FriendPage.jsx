@@ -33,10 +33,13 @@ function FriendPage() {
                 );
                 if(response.data.success === true) {
                     setFriends(response.data.friends);
-                    
                 }
             } catch (error) {
-                console.log(error.message);
+                if (error.response && error.response.status === 401) {
+                    console.log(error.response.data.message);
+                } else {
+                    console.log(error.message);
+                }
             }
         }
     }

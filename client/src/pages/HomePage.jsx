@@ -1,7 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { useAuth0 } from '@auth0/auth0-react';
 import { makeAuthenticatedRequest } from '../utils/makeAuthRequest';
-// import { Link } from 'react-router-dom';
 import axios from 'axios';
 
 function HomePage() {
@@ -52,7 +51,7 @@ function HomePage() {
                     console.log('User registered');
                 }
             } catch (error) {
-                if (error.response && error.response.status === 409) {
+                if (error.response && error.response.status === 401) {
                     console.log(error.response.data.message);
                 } else {
                     console.log(error.message);
@@ -65,6 +64,10 @@ function HomePage() {
 
     const goToFriends = async () => {
         navigate('/user/friends');
+    }
+
+    const goToConvos = async () => {
+        navigate('/convos');
     }
 
   return (
@@ -83,7 +86,7 @@ function HomePage() {
                 <p>{user.email}</p>
                 </div>
                 <button onClick={goToFriends}>Friends List</button>
-                <button>Conversations</button>
+                <button onClick={goToConvos}>Conversations</button>
             </>
             ) : (
             <div>
