@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const ConvoSchema = new Schema({
-    name: {
+    title: {
         type: String,
         required: true,
         maxLength: 64,
@@ -27,6 +27,11 @@ const ConvoSchema = new Schema({
             ref: 'User',
         }],
         validate: [arrayLimit, 'Convo needs at least 1 user'],
+        required: true,
+    },
+    date_created: {
+        type: Date,
+        default: () => DateTime.now().toJSDate(),
         required: true,
     },
 })

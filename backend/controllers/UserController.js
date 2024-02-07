@@ -19,7 +19,6 @@ exports.user_detail = asyncHandler(async (req, res, next) => {
 // Handle user create on POST.
 exports.user_create_post = asyncHandler(async (req, res, next) => {
   try {
-      console.log("Creating user");
       const {userId, username, mongoUser, userEmail} = await getUserInfo(req.headers.authorization);
 
       if(mongoUser) {
@@ -28,6 +27,8 @@ exports.user_create_post = asyncHandler(async (req, res, next) => {
           message: 'User already exists',
         }); 
       }
+
+      console.log("Creating user");
 
       const newUser = new User({ 
         auth0id: userId,

@@ -1,19 +1,88 @@
 const Convo = require("../models/convo");
+const { DateTime } = require("luxon");
 const asyncHandler = require("express-async-handler");
+const getUserInfo = require("../utils/getUserInfo");
 
 // Display list of all convos.
 exports.convo_list = asyncHandler(async (req, res, next) => {
-  res.send("NOT IMPLEMENTED: Convo list");
+  const { mongoUser } = await getUserInfo(req.headers.authorization);
+
+  if (!mongoUser) {
+    return res.status(401).json({
+      success: false,
+      message: "Unauthorized",
+    });
+  }
+
+  console.log("Getting convos");
+
+  const convos = await Convo.find({ users: mongoUser._id }).select('title').exec();
+
+  if(!convos) {
+    return res.status(404).json({
+      success: false,
+      message: 'Convos not found',
+    });
+  }
+
+  return res.status(200).json({
+    success: true,
+    convos: convos,
+  });
 });
 
 // Display detail page for a specific convo.
 exports.convo_detail = asyncHandler(async (req, res, next) => {
-  res.send(`NOT IMPLEMENTED: Convo detail: ${req.params.id}`);
+  const { mongoUser } = await getUserInfo(req.headers.authorization);
+
+  if (!mongoUser) {
+    return res.status(401).json({
+      success: false,
+      message: "Unauthorized",
+    });
+  }
+
+  const convo = await Convo.findById(req.params.id).exec();
+
+  if(!convo) {
+    return res.status(404).json({
+      success: false,
+      message: 'Convo not found',
+    });
+  }
+
+  return res.status(200).json({
+    success: true,
+    convo: convo,
+  });
 });
 
 // Handle convo create on POST.
 exports.convo_create_post = asyncHandler(async (req, res, next) => {
-  res.send("NOT IMPLEMENTED: Convo create POST");
+  console.log("Creating convo");
+  const {mongoUser} = await getUserInfo(req.headers.authorization);
+
+  if(!mongoUser) {
+    return res.status(401).json({
+      success: false,
+      message: 'Unauthorized',
+    });
+  }
+
+  const newConvo = new Convo({ 
+    title: req.body.title,
+    owner: mongoUser._id,
+    messages: [],
+    users: [mongoUser._id],
+    date_created: DateTime.now().toJSDate(),
+  });
+
+  await newConvo.save();
+
+  return res.status(201).json({
+    success: true,
+    message: 'Convo created successfully',
+  });
 });
 
 // Handle convo delete on DELETE.
