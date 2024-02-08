@@ -42,7 +42,7 @@ exports.convo_detail = asyncHandler(async (req, res, next) => {
     });
   }
 
-  const convo = await Convo.findById(req.params.id).exec();
+  const convo = await Convo.findById(req.params.id).populate('messages').exec();
 
   if(!convo) {
     return res.status(404).json({
@@ -51,9 +51,19 @@ exports.convo_detail = asyncHandler(async (req, res, next) => {
     });
   }
 
-  return res.status(200).json({
-    success: true,
-    convo: convo,
+  // Check if user is authorized to access this conversation
+  for(let i = 0; i < convo.users.length; i++) {
+    if(convo.users[i] == mongoUser._id) {
+      return res.status(200).json({
+        success: true,
+        convo: convo,
+      });
+    }
+  }
+
+  return res.status(403).json({
+    success: false,
+    convo: 'You are not authorized to access this conversation',
   });
 });
 

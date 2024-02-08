@@ -45,13 +45,12 @@ router.put("/convo/:id/add", convo_controller.convo_user_add);
 router.put("/convo/:id/remove", convo_controller.convo_user_remove);
 router.get("/convo/:id", convo_controller.convo_detail);
 
+
 /// MESSAGE ROUTES ///
 
-router.post("/message", message_controller.message_create_post);
-router.delete("/message/:id", message_controller.message_delete);
-router.put("/message/:id", message_controller.message_update);
-router.get("/message/:id", message_controller.message_detail);
-router.get("/messages", message_controller.message_list);
+router.post("/convo/:id", message_controller.message_create_post);
+router.delete("/convo/:id/message/:id", message_controller.message_delete);
+router.put("/convo/:id/message/:id", message_controller.message_update);
 
 /// USER ROUTES ///
 

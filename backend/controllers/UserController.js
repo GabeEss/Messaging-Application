@@ -49,10 +49,10 @@ exports.user_create_post = asyncHandler(async (req, res, next) => {
       }
   });
 
-  // Handle user update information on PUT.
-  exports.user_update = asyncHandler(async (req, res, next) => {
-    res.send("NOT IMPLEMENTED: User update PUT");
-  });
+// Handle user update information on PUT.
+exports.user_update = asyncHandler(async (req, res, next) => {
+  res.send("NOT IMPLEMENTED: User update PUT");
+});
 
 // Handle user password change on POST.
 exports.user_password_change_post = asyncHandler(async (req, res, next) => {
