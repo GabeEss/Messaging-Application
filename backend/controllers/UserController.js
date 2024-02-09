@@ -1,4 +1,4 @@
-const User = require('../models/User');
+const User = require('../models/user');
 const asyncHandler = require("express-async-handler");
 const getUserInfo = require("../utils/getUserInfo");
 
@@ -20,6 +20,7 @@ exports.user_detail = asyncHandler(async (req, res, next) => {
 exports.user_create_post = asyncHandler(async (req, res, next) => {
   try {
       const {userId, username, mongoUser, userEmail} = await getUserInfo(req.headers.authorization);
+      console.log("Called get user info");
 
       if(mongoUser) {
         return res.status(409).json({
@@ -66,7 +67,10 @@ exports.user_delete = asyncHandler(async (req, res, next) => {
 
 // Handle display user friends on GET.
 exports.user_friends_get = asyncHandler(async (req, res, next) => {
-    const {mongoUser} = await getUserInfo(req.headers.authorization);
+    // Parse the 'X-User' header to get the user object
+    const user = JSON.parse(req.headers['x-user']);
+    const userId = user.sub;
+    const mongoUser = await User.findOne({ auth0id: userId }).exec(); // MongoDB user
 
     if(!mongoUser) {
       return res.status(404).json({success: false, message: 'User not found'});
@@ -81,6 +85,7 @@ exports.user_friends_get = asyncHandler(async (req, res, next) => {
 // Handle add user friend on PUT.
 exports.user_friend_add = asyncHandler(async (req, res, next) => {
     const {mongoUser} = await getUserInfo(req.headers.authorization);
+    console.log("Called get user info");
 
     if(!mongoUser) {
       return res.status(404).json({success: false, message: 'User not found'});
@@ -114,6 +119,7 @@ exports.user_friend_add = asyncHandler(async (req, res, next) => {
 // Handle remove user friend on PUT.
 exports.user_friend_remove = asyncHandler(async (req, res, next) => {
     const {mongoUser} = await getUserInfo(req.headers.authorization);
+    console.log("Called get user info");
 
     if(!mongoUser) {
       return res.status(404).json({success: false, message: 'User not found'});

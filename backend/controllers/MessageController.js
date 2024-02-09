@@ -1,12 +1,16 @@
 const Message = require("../models/message");
 const Convo = require("../models/convo");
+const User = require("../models/user");
 const { DateTime } = require("luxon");
 const asyncHandler = require("express-async-handler");
 const getUserInfo = require("../utils/getUserInfo");
 
 // Handle message create on POST.
 exports.message_create_post = asyncHandler(async (req, res, next) => {
-  const { mongoUser } = await getUserInfo(req.headers.authorization);
+  // Parse the 'X-User' header to get the user object
+  const user = JSON.parse(req.headers['x-user']);
+  const userId = user.sub;
+  const mongoUser = await User.findOne({ auth0id: userId }).exec(); // MongoDB user
 
   if (!mongoUser) {
     return res.status(401).json({
@@ -29,7 +33,7 @@ exports.message_create_post = asyncHandler(async (req, res, next) => {
   // Check if user is authorized to access this conversation
   for(let i = 0; i < convo.users.length; i++) {
     if(convo.users[i].toString() == mongoUser._id.toString()) {
-      console.log("Authorized to message");
+      // console.log("Authorized to message");
       const newMessage = new Message({
         message: message,
         timestamp: DateTime.now().toJSDate(),

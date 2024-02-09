@@ -1,5 +1,5 @@
 const axios = require('axios');
-const User = require('../models/User');
+const User = require('../models/user');
 
 // Get info from token
 const getUserInfo = async (authHeader) => {

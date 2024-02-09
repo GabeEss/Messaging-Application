@@ -1,11 +1,15 @@
 const Convo = require("../models/convo");
+const User = require("../models/user");
 const { DateTime } = require("luxon");
 const asyncHandler = require("express-async-handler");
 const getUserInfo = require("../utils/getUserInfo");
 
 // Display list of all convos.
 exports.convo_list = asyncHandler(async (req, res, next) => {
-  const { mongoUser } = await getUserInfo(req.headers.authorization);
+  // Parse the 'X-User' header to get the user object
+  const user = JSON.parse(req.headers['x-user']);
+  const userId = user.sub;
+  const mongoUser = await User.findOne({ auth0id: userId }).exec(); // MongoDB user
 
   if (!mongoUser) {
     return res.status(401).json({
@@ -33,7 +37,10 @@ exports.convo_list = asyncHandler(async (req, res, next) => {
 
 // Display detail page for a specific convo.
 exports.convo_detail = asyncHandler(async (req, res, next) => {
-  const { mongoUser } = await getUserInfo(req.headers.authorization);
+  // Parse the 'X-User' header to get the user object
+  const user = JSON.parse(req.headers['x-user']);
+  const userId = user.sub;
+  const mongoUser = await User.findOne({ auth0id: userId }).exec(); // MongoDB user
 
   if (!mongoUser) {
     return res.status(401).json({
@@ -54,7 +61,7 @@ exports.convo_detail = asyncHandler(async (req, res, next) => {
   // Check if user is authorized to access this conversation
   for(let i = 0; i < convo.users.length; i++) {
     if(convo.users[i].toString() == mongoUser._id.toString()) {
-      console.log("Authorized user");
+      // console.log("Authorized user");
       return res.status(200).json({
         success: true,
         convo: convo,
@@ -71,7 +78,10 @@ exports.convo_detail = asyncHandler(async (req, res, next) => {
 // Handle convo create on POST.
 exports.convo_create_post = asyncHandler(async (req, res, next) => {
   console.log("Creating convo");
-  const {mongoUser} = await getUserInfo(req.headers.authorization);
+  // Parse the 'X-User' header to get the user object
+  const user = JSON.parse(req.headers['x-user']);
+  const userId = user.sub;
+  const mongoUser = await User.findOne({ auth0id: userId }).exec(); // MongoDB user
 
   if(!mongoUser) {
     return res.status(401).json({
