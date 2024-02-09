@@ -4,26 +4,31 @@ import { makeAuthenticatedRequest } from "../utils/makeAuthRequest";
 import { useAuth0 } from '@auth0/auth0-react';
 
 function ConvoPage() {
+    const [convoTitle, setConvoTitle] = useState("");
+    const [convoDate, setConvoDate] = useState("");
+    const [users, setUsers] = useState([]);
     const [messages, setMessages] = useState([]);
     const [message, setMessage] = useState('');
     const [isLoading, setIsLoading] = useState(true);
     const [messageLoading, setMessageLoading] = useState(false);
     const {
-        isAuthenticated,
         getAccessTokenSilently
     } = useAuth0();
-    const { convoId } = useParams();
+    const { id } = useParams();
 
     const getMessages = async () => {
-        if (isAuthenticated && convoId) {
+        if (id) {
             try {
                 const response = await makeAuthenticatedRequest(
                     getAccessTokenSilently,
                     'get',
-                    `${import.meta.env.VITE_API_URL}/convo/${convoId}`
+                    `${import.meta.env.VITE_API_URL}/convo/${id}`
                 );
                 if(response.data.success === true) {
                     setMessages(response.data.convo.messages);
+                    setConvoTitle(response.data.convo.title);
+                    setConvoDate(response.data.convo.date_created);
+                    setUsers(response.data.convo.users);
                 }
             } catch (error) {
                 if (error.response && error.response.status === 401) {
@@ -35,7 +40,7 @@ function ConvoPage() {
         }
     }
 
-    // Call getMessages when convoId changes
+    // Call getMessages when id changes
     useEffect(() => {
         const renderMessages = async () => {
             setIsLoading(true);
@@ -44,23 +49,23 @@ function ConvoPage() {
         };
 
         renderMessages();
-    }, [convoId]);
+    }, [id]);
 
     const handleMessageChange = (event) => {
         setMessage(event.target.value);
     }
 
     const createMessage = async () => {
-        if(isAuthenticated && convoId) {
+        if(id) {
             try {
                 const response = await makeAuthenticatedRequest(
                     getAccessTokenSilently,
                     'post',
-                    `${import.meta.env.VITE_API_URL}/convo/${convoId}`,
+                    `${import.meta.env.VITE_API_URL}/convo/${id}`,
                     { message }
                 );
                 if(response.data.success === true) {
-                    console.log('Message created');
+                    setMessages(response.data.convo.messages);
                 }
             } catch (error) {
                 if (error.response && error.response.status === 401) {
@@ -84,7 +89,16 @@ function ConvoPage() {
 
     return(
         <div>
-            <h1>Messages Page</h1>
+            {convoTitle ? <h1>{convoTitle}</h1> : <h1>No title</h1>}
+            {convoDate ? <p>{convoDate}</p> : <p>No date</p>}
+            {users && users.length === 0 ? <p>No users</p>
+            : users.map((user) => {
+                return (
+                    <div key={user._id}>
+                        <p>{user.username}</p>
+                    </div>
+                )
+            })}
             {messages && messages.length === 0 ? <p>No messages yet</p>
             :
                 messages.map((message) => {
@@ -92,7 +106,7 @@ function ConvoPage() {
                         <div key={message._id}>
                             <p>{message.message}</p>
                             <div>
-                                <p>{message.sender}</p>
+                                <p>{message.username}</p>
                                 <p>{message.timestamp}</p>
                             </div>
                         </div>
@@ -109,7 +123,7 @@ function ConvoPage() {
                         value={message}
                         onChange={handleMessageChange}
                     />
-                    {messageLoading ? <p>Creating...</p> : <button>Send</button>}
+                    {messageLoading ? <p>Sending...</p> : <button>Send</button>}
                 </form>
             </div>
         </div>

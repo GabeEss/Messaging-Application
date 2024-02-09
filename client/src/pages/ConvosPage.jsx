@@ -8,7 +8,6 @@ function ConvosPage() {
     const [isLoading, setIsLoading] = useState(true);
     const navigate = useNavigate();
     const {
-        isAuthenticated,
         getAccessTokenSilently
     } = useAuth0();
 
@@ -23,22 +22,20 @@ function ConvosPage() {
     }, []);
 
     const getConversations = async () => {
-        if (isAuthenticated) {
-            try {
-                const response = await makeAuthenticatedRequest(
-                    getAccessTokenSilently,
-                    'get',
-                    `${import.meta.env.VITE_API_URL}/convos`
-                );
-                if(response.data.success === true) {
-                    setConversations(response.data.convos);
-                }
-            } catch (error) {
-                if (error.response && error.response.status === 401) {
-                    console.log(error.response.data.message);
-                } else {
-                    console.log(error.message);
-                }
+        try {
+            const response = await makeAuthenticatedRequest(
+                getAccessTokenSilently,
+                'get',
+                `${import.meta.env.VITE_API_URL}/convos`
+            );
+            if(response.data.success === true) {
+                setConversations(response.data.convos);
+            }
+        } catch (error) {
+            if (error.response && error.response.status === 401) {
+                console.log(error.response.data.message);
+            } else {
+                console.log(error.message);
             }
         }
     }
