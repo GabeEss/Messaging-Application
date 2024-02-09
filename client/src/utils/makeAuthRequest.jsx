@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export async function makeAuthenticatedRequest(getAccessTokenSilently, method, url, data = {}) {
+export async function makeAuthenticatedRequest(getAccessTokenSilently, method, url, data = {}, options) {
 
     const token = await getAccessTokenSilently({
         scope: "read:convos write:convos"
@@ -11,7 +11,8 @@ export async function makeAuthenticatedRequest(getAccessTokenSilently, method, u
         url,
         data,
         headers: {
-            authorization: `Bearer ${token}`
+            authorization: `Bearer ${token}`,
+            'X-User': JSON.stringify(options.user)
         }
     });
 

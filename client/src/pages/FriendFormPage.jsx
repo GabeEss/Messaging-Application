@@ -10,7 +10,8 @@ function FriendForm() {
 
     const {
         isAuthenticated,
-        getAccessTokenSilently
+        getAccessTokenSilently,
+        user
     } = useAuth0();
 
     const handleUsernameChange = (event) => {
@@ -24,7 +25,8 @@ function FriendForm() {
                     getAccessTokenSilently,
                     'put',
                     `${import.meta.env.VITE_API_URL}/user/friends/${action}`,
-                    { username }
+                    { username, user },
+                    { username, user }
                 );
                 if(response.data.success === true) {
                     navigate('/user/friends');

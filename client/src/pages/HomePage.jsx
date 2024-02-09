@@ -30,6 +30,8 @@ function HomePage() {
                 getAccessTokenSilently,
                 'get',
                 `${import.meta.env.VITE_API_URL}/protected`
+                , {},
+                { user }
             );
             console.log(response.data);
         } catch (error) {
@@ -45,7 +47,9 @@ function HomePage() {
                 const response = await makeAuthenticatedRequest(
                     getAccessTokenSilently,
                     'post',
-                    `${import.meta.env.VITE_API_URL}/user/register`
+                    `${import.meta.env.VITE_API_URL}/user/register`,
+                    {},
+                    { user }
                 );
                 if (response.data.success === true) {
                     console.log('User registered');

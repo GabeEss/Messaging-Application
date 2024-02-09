@@ -8,7 +8,9 @@ function ConvosPage() {
     const [isLoading, setIsLoading] = useState(true);
     const navigate = useNavigate();
     const {
-        getAccessTokenSilently
+        getAccessTokenSilently,
+        user,
+        isAuthenticated
     } = useAuth0();
 
     useEffect(() => {
@@ -19,23 +21,27 @@ function ConvosPage() {
         };
 
         renderConversations();
-    }, []);
+    }, [isAuthenticated]);
 
     const getConversations = async () => {
-        try {
-            const response = await makeAuthenticatedRequest(
-                getAccessTokenSilently,
-                'get',
-                `${import.meta.env.VITE_API_URL}/convos`
-            );
-            if(response.data.success === true) {
-                setConversations(response.data.convos);
-            }
-        } catch (error) {
-            if (error.response && error.response.status === 401) {
-                console.log(error.response.data.message);
-            } else {
-                console.log(error.message);
+        if(isAuthenticated) {
+            try {
+                const response = await makeAuthenticatedRequest(
+                    getAccessTokenSilently,
+                    'get',
+                    `${import.meta.env.VITE_API_URL}/convos`,
+                    {},
+                    { user }
+                );
+                if(response.data.success === true) {
+                    setConversations(response.data.convos);
+                }
+            } catch (error) {
+                if (error.response && error.response.status === 401) {
+                    console.log(error.response.data.message);
+                } else {
+                    console.log(error.message);
+                }
             }
         }
     }

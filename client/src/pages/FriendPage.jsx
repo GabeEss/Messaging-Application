@@ -9,7 +9,8 @@ function FriendPage() {
     const navigate = useNavigate();
 
     const {
-        getAccessTokenSilently
+        getAccessTokenSilently,
+        user,
     } = useAuth0();
 
     useEffect(() => {
@@ -27,7 +28,9 @@ function FriendPage() {
             const response = await makeAuthenticatedRequest(
                 getAccessTokenSilently,
                 'get',
-                `${import.meta.env.VITE_API_URL}/user/friends`
+                `${import.meta.env.VITE_API_URL}/user/friends`,
+                {},
+                { user }
             );
             if(response.data.success === true) {
                 setFriends(response.data.friends);

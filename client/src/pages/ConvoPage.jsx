@@ -12,7 +12,9 @@ function ConvoPage() {
     const [isLoading, setIsLoading] = useState(true);
     const [messageLoading, setMessageLoading] = useState(false);
     const {
-        getAccessTokenSilently
+        getAccessTokenSilently,
+        user,
+        isAuthenticated
     } = useAuth0();
     const { id } = useParams();
 
@@ -22,7 +24,9 @@ function ConvoPage() {
                 const response = await makeAuthenticatedRequest(
                     getAccessTokenSilently,
                     'get',
-                    `${import.meta.env.VITE_API_URL}/convo/${id}`
+                    `${import.meta.env.VITE_API_URL}/convo/${id}`,
+                    {},
+                    { user },
                 );
                 if(response.data.success === true) {
                     setMessages(response.data.convo.messages);
@@ -49,7 +53,7 @@ function ConvoPage() {
         };
 
         renderMessages();
-    }, [id]);
+    }, [id, isAuthenticated]);
 
     const handleMessageChange = (event) => {
         setMessage(event.target.value);
@@ -62,7 +66,8 @@ function ConvoPage() {
                     getAccessTokenSilently,
                     'post',
                     `${import.meta.env.VITE_API_URL}/convo/${id}`,
-                    { message }
+                    { message, user },
+                    { message, user }
                 );
                 if(response.data.success === true) {
                     setMessages(response.data.convo.messages);

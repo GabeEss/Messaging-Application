@@ -8,7 +8,8 @@ function ConvoForm() {
     const [isLoading, setIsLoading] = useState(false);
     const {
         isAuthenticated,
-        getAccessTokenSilently
+        getAccessTokenSilently,
+        user
     } = useAuth0();
     const navigate = useNavigate();
 
@@ -23,7 +24,8 @@ function ConvoForm() {
                     getAccessTokenSilently,
                     'post',
                     `${import.meta.env.VITE_API_URL}/convo`,
-                    { title }
+                    { title, user },
+                    { title, user }
                 );
                 if(response.data.success === true) {
                     console.log('Conversation created');
