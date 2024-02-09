@@ -1,11 +1,59 @@
 const Message = require("../models/message");
+const Convo = require("../models/convo");
 const { DateTime } = require("luxon");
 const asyncHandler = require("express-async-handler");
 const getUserInfo = require("../utils/getUserInfo");
 
 // Handle message create on POST.
 exports.message_create_post = asyncHandler(async (req, res, next) => {
-  res.send("NOT IMPLEMENTED: Message create POST");
+  const { mongoUser } = await getUserInfo(req.headers.authorization);
+
+  if (!mongoUser) {
+    return res.status(401).json({
+      success: false,
+      message: "Unauthorized",
+    });
+  }
+
+  const message = req.body.message;
+  const convoId = req.params.id;
+  const convo = await Convo.findById(convoId).populate('messages').exec();
+
+  if(!convo) {
+    return res.status(404).json({
+      success: false,
+      message: 'Convo required',
+    });
+  }
+
+  // Check if user is authorized to access this conversation
+  for(let i = 0; i < convo.users.length; i++) {
+    if(convo.users[i].toString() == mongoUser._id.toString()) {
+      console.log("Authorized to message");
+      const newMessage = new Message({
+        message: message,
+        timestamp: DateTime.now().toJSDate(),
+        convo: convoId,
+        senderId: mongoUser._id,
+        username: mongoUser.username,
+      });
+    
+      await newMessage.save();
+      convo.messages.push(newMessage);
+      await convo.save();
+    
+      return res.status(201).json({
+        success: true,
+        message: "Message sent successfully",
+        convo: convo,
+      });
+    }
+  }
+
+  return res.status(403).json({
+    success: false,
+    message: "You are not authorized to access this conversation",
+  });
 });
 
 // Handle message delete on DELETE.

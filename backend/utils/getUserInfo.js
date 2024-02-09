@@ -7,6 +7,7 @@ const getUserInfo = async (authHeader) => {
         throw new Error('Invalid authorization header');
     }
     const accessToken = authHeader.split(" ")[1];
+
     const response = await axios.get(process.env.AUTH_ISSUER + "/userinfo", {
         headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -19,28 +20,19 @@ const getUserInfo = async (authHeader) => {
     const userEmail = userInfo.email; // Auth0 user email
 
     if (typeof userId !== 'string' || typeof username !== 'string') {
-        return res.status(401).json({success: false, message: 'Unauthorized'});
-      }
+        throw new Error('Unauthorized');
+    }
 
     const user = await User.findOne({ auth0id: userId }).exec(); // MongoDB user
 
-    if(!user) {
-        // User not found in MongoDB
-        return {
-            userId: userId,
-            username: username,
-            mongoUser: null,
-            userEmail: userEmail,
-        }
-    } else {
-        // User found in MongoDB
-        return {
-            userId: userId,
-            username: username,
-            mongoUser: user,
-            userEmail: userEmail,
-        }
+    const userData = {
+        userId: userId,
+        username: username,
+        mongoUser: user || null,
+        userEmail: userEmail,
     }
+
+    return userData;
 }
 
 module.exports = getUserInfo;

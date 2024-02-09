@@ -11,6 +11,7 @@ const MessageSchema = new Schema({
     }, 
     timestamp: {
         type: Date,
+        default: () => DateTime.now().toJSDate(),
         required: true,
     },
     convo: {
@@ -18,10 +19,15 @@ const MessageSchema = new Schema({
         ref: "Convo",
         required: true,
     },
-    sender: {
+    senderId: {
         type: Schema.Types.ObjectId,
         ref: "User",
         required: true,
+    },
+    username: {
+        type: String,
+        required: true,
+        maxLength: 64
     }
 })
 
