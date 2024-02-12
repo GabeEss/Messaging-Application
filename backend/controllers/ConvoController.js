@@ -49,7 +49,7 @@ exports.convo_detail = asyncHandler(async (req, res, next) => {
     });
   }
 
-  const convo = await Convo.findById(req.params.id).populate('messages').exec();
+  const convo = await Convo.findById(req.params.id).populate(['messages', 'users']).exec();
 
   if(!convo) {
     return res.status(404).json({
@@ -60,7 +60,15 @@ exports.convo_detail = asyncHandler(async (req, res, next) => {
 
   // Check if user is authorized to access this conversation
   for(let i = 0; i < convo.users.length; i++) {
-    if(convo.users[i].toString() == mongoUser._id.toString()) {
+    if(convo.users[i]._id.toString() == mongoUser._id.toString()) {
+      if(convo.owner.toString() == mongoUser._id.toString()) {
+        // console.log("Authorized owner");
+        return res.status(200).json({
+          success: true,
+          convo: convo,
+          owner: true,
+        });
+      }
       // console.log("Authorized user");
       return res.status(200).json({
         success: true,
@@ -117,11 +125,139 @@ exports.convo_title_update = asyncHandler(async (req, res, next) => {
 });
 
 // Handle convo user add on PUT.
-exports.convo_user_add = asyncHandler(async (req, res, next) => {
-  res.send("NOT IMPLEMENTED: Convo user add PUT");
+exports.convo_add_friend = asyncHandler(async (req, res, next) => {
+  // Parse the 'X-User' header to get the user object
+  const user = JSON.parse(req.headers['x-user']);
+  const userId = user.sub;
+  const mongoUser = await User.findOne({ auth0id: userId }).exec(); // MongoDB user
+
+  if (!mongoUser) {
+    return res.status(401).json({
+      success: false,
+      message: "Unauthorized",
+    });
+  }
+
+  const friendEmail = req.body.username;
+  const friend = await User.findOne({ email: friendEmail }).exec();
+
+  if (!friend) {
+    return res.status(404).json({
+      success: false,
+      message: "User not found",
+    });
+  }
+
+  if (friendEmail === mongoUser.email) {
+    return res.status(409).json({
+      success: false,
+      message: "Cannot add yourself to the convo",
+    });
+  }
+
+  // Convert friend._id to string once, to avoid repeated conversions
+  const friendIdStr = friend._id.toString();
+
+  // Check if the friend is in the user's friend list
+  const isFriend = mongoUser.friends.some(friend => friend.toString() === friendIdStr);
+
+  if (!isFriend) {
+    return res.status(403).json({
+      success: false,
+      message: "User is not a friend",
+    });
+  }
+
+  const convoId = req.params.id;
+  const convo = await Convo.findById(convoId).populate('users').exec();
+
+  if (!convo) {
+    return res.status(404).json({
+      success: false,
+      message: "Convo not found",
+    });
+  }
+
+    // Check if the friend is already in the conversation
+    const isAlreadyInConvo = convo.users.some(user => user._id.toString() === friendIdStr);
+
+    if (isAlreadyInConvo) {
+      return res.status(403).json({
+        success: false,
+        message: "The user has already been added to the conversation",
+      });
+    }
+    
+
+    // If the friend is not already in the conversation, add them
+    convo.users.push(friend._id);
+    await convo.save();
+
+    return res.status(201).json({
+      success: true,
+      message: "Friend added to the conversation",
+    });
 });
 
 // Handle convo user remove on PUT.
-exports.convo_user_remove = asyncHandler(async (req, res, next) => {
-  res.send("NOT IMPLEMENTED: Convo user remove PUT");
+exports.convo_remove_friend = asyncHandler(async (req, res, next) => {
+  // Parse the 'X-User' header to get the user object
+  const user = JSON.parse(req.headers['x-user']);
+  const userId = user.sub;
+  const mongoUser = await User.findOne({ auth0id: userId }).exec(); // MongoDB user
+
+  if (!mongoUser) {
+    return res.status(401).json({
+      success: false,
+      message: "Unauthorized",
+    });
+  }
+
+  const friendEmail = req.body.username;
+  const friend = await User.findOne({ email: friendEmail }).exec();
+
+  if (!friend) {
+    return res.status(404).json({
+      success: false,
+      message: "User not found",
+    });
+  }
+
+  // Convert friend._id to string once, to avoid repeated conversions
+  const friendIdStr = friend._id.toString();
+
+  const convoId = req.params.id;
+  const convo = await Convo.findById(convoId).populate('users').exec();
+
+  if (!convo) {
+    return res.status(404).json({
+      success: false,
+      message: "Convo not found",
+    });
+  }
+
+    // Check if the friend is in the conversation
+    const isInConvo = convo.users.some(user => user._id.toString() === friendIdStr);
+
+    if (!isInConvo) {
+      return res.status(403).json({
+        success: false,
+        message: "This user is not in the conversation",
+      });
+    }
+
+    if(friendEmail === mongoUser.email) {
+      return res.status(409).json({
+        success: false,
+        message: "Cannot remove yourself from the convo. Use delete button when all users are removed.",
+      });
+    }
+
+    convo.users.pull(friend._id);
+    await convo.save();
+
+    return res.status(201).json({
+      success: true,
+      message: "Friend removed from the conversation",
+    });
 });

@@ -41,10 +41,9 @@ router.get("/convos", convo_controller.convo_list);
 router.post("/convo", convo_controller.convo_create_post);
 router.delete("/convo/:id", convo_controller.convo_delete);
 router.put("/convo/:id", convo_controller.convo_title_update);
-router.put("/convo/:id/add", convo_controller.convo_user_add);
-router.put("/convo/:id/remove", convo_controller.convo_user_remove);
 router.get("/convo/:id", convo_controller.convo_detail);
-
+router.put("/convo/:id/add", convo_controller.convo_add_friend);
+router.put("/convo/:id/remove", convo_controller.convo_remove_friend);
 
 /// MESSAGE ROUTES ///
 
