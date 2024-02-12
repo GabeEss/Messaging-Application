@@ -7,6 +7,7 @@ import ConvosPage from './pages/ConvosPage';
 import ConvoPage from './pages/ConvoPage';
 import FriendForm from './pages/FriendFormPage';
 import ConvoForm from './pages/ConvoFormPage';
+import AddRemoveForm from './pages/AddRemoveFormPage';
 
 function App() {
   return(
@@ -20,6 +21,7 @@ function App() {
           <Route path='/convo/:id' element={<ConvoPage/>}/>
           <Route path="/friend-form" element={<FriendForm/>}/>
           <Route path="/convo-form" element={<ConvoForm/>}/>
+          <Route path="convo/:id/add-remove-user" element={<AddRemoveForm/>}/>
         </Routes>
       </MainDisplay>
     </Router>

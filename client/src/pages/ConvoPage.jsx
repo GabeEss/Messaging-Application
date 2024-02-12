@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { makeAuthenticatedRequest } from "../utils/makeAuthRequest";
 import { useAuth0 } from '@auth0/auth0-react';
 
 function ConvoPage() {
     const [convoTitle, setConvoTitle] = useState("");
     const [convoDate, setConvoDate] = useState("");
+    const [convoOwner, setConvoOwner] = useState(false);
     const [users, setUsers] = useState([]);
     const [messages, setMessages] = useState([]);
     const [message, setMessage] = useState('');
@@ -17,6 +18,7 @@ function ConvoPage() {
         isAuthenticated
     } = useAuth0();
     const { id } = useParams();
+    const navigate = useNavigate();
 
     const getMessages = async () => {
         if (id) {
@@ -33,6 +35,7 @@ function ConvoPage() {
                     setConvoTitle(response.data.convo.title);
                     setConvoDate(response.data.convo.date_created);
                     setUsers(response.data.convo.users);
+                    setConvoOwner(response.data.owner);
                 }
             } catch (error) {
                 if (error.response && error.response.status === 401) {
@@ -90,12 +93,19 @@ function ConvoPage() {
         setMessage('');
     }
 
+    const addRemoveUser = async () => {
+        if(convoOwner) {
+            navigate(`/convo/${id}/add-remove-user`);
+        }
+    }
+
     if(isLoading) return (<p>Loading...</p>);
 
     return(
         <div>
             {convoTitle ? <h1>{convoTitle}</h1> : <h1>No title</h1>}
             {convoDate ? <p>{convoDate}</p> : <p>No date</p>}
+            {convoOwner ? <button onClick={addRemoveUser}>Add/Remove a User</button> : null}
             {users && users.length === 0 ? <p>No users</p>
             : users.map((user) => {
                 return (
