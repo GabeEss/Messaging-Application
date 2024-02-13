@@ -6,7 +6,8 @@ import { useAuth0 } from '@auth0/auth0-react';
 function ConvoPage() {
     const [convoTitle, setConvoTitle] = useState("");
     const [convoDate, setConvoDate] = useState("");
-    const [convoOwner, setConvoOwner] = useState(false);
+    const [convoOwner, setConvoOwner] = useState(false); // The convo owner can add/remove users
+    const [notOwner, setNotOwner] = useState(false); // Can send messages and leave the convo
     const [users, setUsers] = useState([]);
     const [messages, setMessages] = useState([]);
     const [message, setMessage] = useState('');
@@ -35,7 +36,10 @@ function ConvoPage() {
                     setConvoTitle(response.data.convo.title);
                     setConvoDate(response.data.convo.date_created);
                     setUsers(response.data.convo.users);
-                    setConvoOwner(response.data.owner);
+                    if(response.data.owner)
+                        setConvoOwner(response.data.owner);
+                    else 
+                        setNotOwner(true);
                 }
             } catch (error) {
                 if (error.response && error.response.status === 401) {
@@ -93,9 +97,38 @@ function ConvoPage() {
         setMessage('');
     }
 
+    const handleDelete = async () => {
+        if(convoOwner) {
+            navigate(`/convo/${id}/delete`);
+        }
+    }
+    
     const addRemoveUser = async () => {
         if(convoOwner) {
             navigate(`/convo/${id}/add-remove-user`);
+        }
+    }
+
+    const leaveConvo = async () => {
+        if(notOwner) {
+            try {
+                const response = await makeAuthenticatedRequest(
+                    getAccessTokenSilently,
+                    'put',
+                    `${import.meta.env.VITE_API_URL}/convo/${id}/leave`,
+                    { user },
+                    { user }
+                );
+                if(response.data.success === true) {
+                    navigate('/convos');
+                }
+            } catch (error) {
+                if (error.response && error.response.status === 401) {
+                    console.log(error.response.data.message);
+                } else {
+                    console.log(error.message);
+                }
+            }
         }
     }
 
@@ -106,6 +139,8 @@ function ConvoPage() {
             {convoTitle ? <h1>{convoTitle}</h1> : <h1>No title</h1>}
             {convoDate ? <p>{convoDate}</p> : <p>No date</p>}
             {convoOwner ? <button onClick={addRemoveUser}>Add/Remove a User</button> : null}
+            {convoOwner ? <button onClick={handleDelete}>Delete Convo</button> : null}
+            {notOwner ? <button onClick={leaveConvo}>Leave Convo</button> : null}
             {users && users.length === 0 ? <p>No users</p>
             : users.map((user) => {
                 return (
