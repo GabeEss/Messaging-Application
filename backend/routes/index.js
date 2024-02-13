@@ -44,6 +44,7 @@ router.put("/convo/:id", convo_controller.convo_title_update);
 router.get("/convo/:id", convo_controller.convo_detail);
 router.put("/convo/:id/add", convo_controller.convo_add_friend);
 router.put("/convo/:id/remove", convo_controller.convo_remove_friend);
+router.put("/convo/:id/leave", convo_controller.convo_leave);
 
 /// MESSAGE ROUTES ///
 

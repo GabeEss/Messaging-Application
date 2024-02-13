@@ -1,5 +1,6 @@
 const Convo = require("../models/convo");
 const User = require("../models/user");
+const Message = require("../models/message");
 const { DateTime } = require("luxon");
 const asyncHandler = require("express-async-handler");
 const getUserInfo = require("../utils/getUserInfo");
@@ -116,7 +117,51 @@ exports.convo_create_post = asyncHandler(async (req, res, next) => {
 
 // Handle convo delete on DELETE.
 exports.convo_delete = asyncHandler(async (req, res, next) => {
-  res.send("NOT IMPLEMENTED: Convo DELETE");
+  // Parse the 'X-User' header to get the user object
+  const user = JSON.parse(req.headers['x-user']);
+  const userId = user.sub;
+  const mongoUser = await User.findOne({ auth0id: userId }).exec(); // MongoDB user
+
+  if (!mongoUser) {
+    return res.status(401).json({
+      success: false,
+      message: "Unauthorized",
+    });
+  }
+
+  const convo = await Convo.findById(req.params.id).exec();
+  if(!convo) {
+    return res.status(404).json({
+      success: false,
+      message: 'Convo not found',
+    });
+  }
+
+  if(convo.owner.toString() !== mongoUser._id.toString()) {
+    return res.status(403).json({
+      success: false,
+      message: 'You are not authorized to delete this conversation',
+    });
+  }
+
+  const deletedConvo = await Convo.findByIdAndDelete(req.params.id).exec();
+  if (!deletedConvo) {
+      console.log("Failed to delete Convo");
+  } else {
+      console.log("Convo deleted");
+  }
+
+  const deleteMessagesResult = await Message.deleteMany({convo: convo._id}).exec();
+  if (deleteMessagesResult.deletedCount === 0) {
+      console.log("Failed to delete messages");
+  } else {
+      console.log("Messages deleted");
+  }
+
+  return res.status(200).json({
+    success: true,
+    message: 'Convo deleted successfully',
+  });
 });
 
 // Handle convo update on PUT.
@@ -249,7 +294,7 @@ exports.convo_remove_friend = asyncHandler(async (req, res, next) => {
     if(friendEmail === mongoUser.email) {
       return res.status(409).json({
         success: false,
-        message: "Cannot remove yourself from the convo. Use delete button when all users are removed.",
+        message: "Cannot remove yourself from the convo. Use delete button.",
       });
     }
 
@@ -260,4 +305,52 @@ exports.convo_remove_friend = asyncHandler(async (req, res, next) => {
       success: true,
       message: "Friend removed from the conversation",
     });
+});
+
+exports.convo_leave = asyncHandler(async (req, res, next) => {
+  // Parse the 'X-User' header to get the user object
+  const user = JSON.parse(req.headers['x-user']);
+  const userId = user.sub;
+  const mongoUser = await User.findOne({ auth0id: userId }).exec(); // MongoDB user
+
+  if (!mongoUser) {
+    return res.status(401).json({
+      success: false,
+      message: "Unauthorized",
+    });
+  }
+
+  const convoId = req.params.id;
+  const convo = await Convo.findById(convoId).populate('users').exec();
+
+  if (!convo) {
+    return res.status(404).json({
+      success: false,
+      message: "Convo not found",
+    });
+  }
+
+  if (convo.owner.toString() === mongoUser._id.toString()) {
+    return res.status(403).json({
+      success: false,
+      message: "Owner cannot leave the conversation",
+    });
+  }
+
+  const isInConvo = convo.users.some(user => user._id.toString() === mongoUser._id.toString());
+
+  if (!isInConvo) {
+    return res.status(403).json({
+      success: false,
+      message: "You are not in the conversation",
+    });
+  }
+
+  convo.users.pull(mongoUser._id);
+  await convo.save();
+
+  return res.status(201).json({
+    success: true,
+    message: "You have left the conversation",
+  });
 });
