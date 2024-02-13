@@ -33,24 +33,29 @@ exports.message_create_post = asyncHandler(async (req, res, next) => {
   // Check if user is authorized to access this conversation
   for(let i = 0; i < convo.users.length; i++) {
     if(convo.users[i].toString() == mongoUser._id.toString()) {
-      // console.log("Authorized to message");
-      const newMessage = new Message({
-        message: message,
-        timestamp: DateTime.now().toJSDate(),
-        convo: convoId,
-        senderId: mongoUser._id,
-        username: mongoUser.username,
-      });
-    
-      await newMessage.save();
-      convo.messages.push(newMessage);
-      await convo.save();
-    
-      return res.status(201).json({
-        success: true,
-        message: "Message sent successfully",
-        convo: convo,
-      });
+      try {
+        // console.log("Authorized to message");
+        const newMessage = new Message({
+          message: message,
+          timestamp: DateTime.now().toJSDate(),
+          convo: convoId,
+          senderId: mongoUser._id,
+          username: mongoUser.username,
+        });
+      
+        await newMessage.save();
+        convo.messages.push(newMessage);
+        await convo.save();
+      
+        return res.status(201).json({
+          success: true,
+          message: "Message sent successfully",
+          convo: convo,
+        });
+      } catch (error) {
+        console.log('Error:', error.message);
+        return res.status(500).json({success: false, message: 'Error sending message'});
+      }
     }
   }
 

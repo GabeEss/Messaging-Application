@@ -40,8 +40,8 @@ router.get('/protected', async (req, res) => {
 router.get("/convos", convo_controller.convo_list);
 router.post("/convo", convo_controller.convo_create_post);
 router.delete("/convo/:id", convo_controller.convo_delete);
-router.put("/convo/:id", convo_controller.convo_title_update);
 router.get("/convo/:id", convo_controller.convo_detail);
+router.put("/convo/:id/edit", convo_controller.convo_title_update);
 router.put("/convo/:id/add", convo_controller.convo_add_friend);
 router.put("/convo/:id/remove", convo_controller.convo_remove_friend);
 router.put("/convo/:id/leave", convo_controller.convo_leave);

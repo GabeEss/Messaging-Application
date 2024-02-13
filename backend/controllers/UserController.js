@@ -107,13 +107,18 @@ exports.user_friend_add = asyncHandler(async (req, res, next) => {
       return res.status(409).json({success: false, message: 'Friend already exists'});
     }
 
-    mongoUser.friends.push(friend._id);
-    friend.friends.push(mongoUser._id);
+    try {
+      mongoUser.friends.push(friend._id);
+      friend.friends.push(mongoUser._id);
 
-    await mongoUser.save();
-    await friend.save();
+      await mongoUser.save();
+      await friend.save();
 
-    return res.status(200).json({success: true, message: 'Friend added successfully'});
+      return res.status(200).json({success: true, message: 'Friend added successfully'});
+    } catch(error) {
+      console.log('Error:', error.message);
+      return res.status(500).json({success: false, message: 'Error adding friend'});
+    }
 });
 
 // Handle remove user friend on PUT.
@@ -134,13 +139,18 @@ exports.user_friend_remove = asyncHandler(async (req, res, next) => {
     }
 
     if(mongoUser.friends.some(f => f.toString() === friend._id.toString())) {
-      mongoUser.friends.pull(friend._id);
-      friend.friends.pull(mongoUser._id);
+      try {
+        mongoUser.friends.pull(friend._id);
+        friend.friends.pull(mongoUser._id);
 
-      await mongoUser.save();
-      await friend.save();
+        await mongoUser.save();
+        await friend.save();
 
-      return res.status(200).json({success: true, message: 'Friend removed successfully'});
+        return res.status(200).json({success: true, message: 'Friend removed successfully'});
+      } catch (error) {
+        console.log('Error:', error.message);
+        return res.status(500).json({success: false, message: 'Error removing friend'});
+      }
     } else {
       return res.status(409).json({success: false, message: 'This user is not a friend'});
     }
