@@ -102,11 +102,15 @@ function ConvoPage() {
             navigate(`/convo/${id}/delete`);
         }
     }
-    
+
     const addRemoveUser = async () => {
         if(convoOwner) {
             navigate(`/convo/${id}/add-remove-user`);
         }
+    }
+
+    const handleTitleChange = async () => {
+        navigate(`/convo/${id}/edit-title`);
     }
 
     const leaveConvo = async () => {
@@ -141,6 +145,7 @@ function ConvoPage() {
             {convoOwner ? <button onClick={addRemoveUser}>Add/Remove a User</button> : null}
             {convoOwner ? <button onClick={handleDelete}>Delete Convo</button> : null}
             {notOwner ? <button onClick={leaveConvo}>Leave Convo</button> : null}
+            <button onClick={handleTitleChange}>Edit Title</button>
             {users && users.length === 0 ? <p>No users</p>
             : users.map((user) => {
                 return (
