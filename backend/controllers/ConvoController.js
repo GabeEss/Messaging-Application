@@ -3,6 +3,7 @@ const User = require("../models/user");
 const Message = require("../models/message");
 const { DateTime } = require("luxon");
 const asyncHandler = require("express-async-handler");
+const mongoose = require('mongoose');
 const getUserInfo = require("../utils/getUserInfo");
 
 // Display list of all convos.
@@ -144,19 +145,37 @@ exports.convo_delete = asyncHandler(async (req, res, next) => {
     });
   }
 
-  const deletedConvo = await Convo.findByIdAndDelete(req.params.id).exec();
-  if (!deletedConvo) {
-      console.log("Failed to delete Convo");
-  } else {
-      console.log("Convo deleted");
-  }
+  const session = await mongoose.startSession();
+  session.startTransaction();
+  try {
+    const deleteMessagesResult = await Message.deleteMany({convo: convo._id}).session(session).exec();
+    if (deleteMessagesResult.deletedCount === 0) {
+        throw new Error("Failed to delete messages");
+    } else {
+        console.log("Messages deleted");
+    }
 
-  const deleteMessagesResult = await Message.deleteMany({convo: convo._id}).exec();
-  if (deleteMessagesResult.deletedCount === 0) {
-      console.log("Failed to delete messages");
-  } else {
-      console.log("Messages deleted");
+    const deletedConvo = await Convo.findByIdAndDelete(req.params.id).session(session).exec();
+    if (!deletedConvo) {
+        console.log("Failed to delete Convo");
+    } else {
+        console.log("Convo deleted");
+    }
+
+    await session.commitTransaction();
+    session.endSession();
+  } catch (error) {
+      await session.abortTransaction();
+      session.endSession();
+      console.error("Error deleting convo and messages:", error);
+      return res.status(500).json({
+          success: false,
+          message: 'Error deleting convo and messages',
+      });
   }
+  
+
+  
 
   return res.status(200).json({
     success: true,
