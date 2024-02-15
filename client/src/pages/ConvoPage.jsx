@@ -1,28 +1,31 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { makeAuthenticatedRequest } from "../utils/makeAuthRequest";
 import { useAuth0 } from '@auth0/auth0-react';
+import MessageDisplayComponent from '../components/MessageDisplayComponent';
+import { RenderMessagesContext } from '../contexts/RenderMessagesContext';
 
 function ConvoPage() {
     const [convoTitle, setConvoTitle] = useState("");
     const [convoDate, setConvoDate] = useState("");
     const [convoOwner, setConvoOwner] = useState(false); // The convo owner can add/remove users
     const [notOwner, setNotOwner] = useState(false); // Can send messages and leave the convo
+    const [mongoId, setMongoId] = useState(""); // The mongoId of the convo
     const [users, setUsers] = useState([]);
     const [messages, setMessages] = useState([]);
-    const [message, setMessage] = useState('');
-    const [isLoading, setIsLoading] = useState(true);
-    const [messageLoading, setMessageLoading] = useState(false);
+    const [isRendering, setIsRendering] = useState(true);
+    const {shouldRenderMessages} = useContext(RenderMessagesContext);
+    
     const {
         getAccessTokenSilently,
         user,
-        isAuthenticated
+        isLoading
     } = useAuth0();
     const { id } = useParams();
     const navigate = useNavigate();
 
-    const getMessages = async () => {
-        if (id) {
+    const getConvo = async () => {
+        if (id && !isLoading) {
             try {
                 const response = await makeAuthenticatedRequest(
                     getAccessTokenSilently,
@@ -36,6 +39,7 @@ function ConvoPage() {
                     setConvoTitle(response.data.convo.title);
                     setConvoDate(response.data.convo.date_created);
                     setUsers(response.data.convo.users);
+                    setMongoId(response.data.mongoId);
                     if(response.data.owner)
                         setConvoOwner(response.data.owner);
                     else 
@@ -53,49 +57,14 @@ function ConvoPage() {
 
     // Call getMessages when id changes
     useEffect(() => {
-        const renderMessages = async () => {
-            setIsLoading(true);
-            await getMessages();
-            setIsLoading(false);
+        const renderConvoDetails = async () => {
+            setIsRendering(true);
+            await getConvo();
+            setIsRendering(false);
         };
 
-        renderMessages();
-    }, [id, isAuthenticated]);
-
-    const handleMessageChange = (event) => {
-        setMessage(event.target.value);
-    }
-
-    const createMessage = async () => {
-        if(id) {
-            try {
-                const response = await makeAuthenticatedRequest(
-                    getAccessTokenSilently,
-                    'post',
-                    `${import.meta.env.VITE_API_URL}/convo/${id}`,
-                    { message, user },
-                    { message, user }
-                );
-                if(response.data.success === true) {
-                    setMessages(response.data.convo.messages);
-                }
-            } catch (error) {
-                if (error.response && error.response.status === 401) {
-                    console.log(error.response.data.message);
-                } else {
-                    console.log(error.message);
-                }
-            }
-        }
-    }
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        setMessageLoading(true);
-        await createMessage();
-        setMessageLoading(false);
-        setMessage('');
-    }
+        renderConvoDetails();
+    }, [id, isLoading, shouldRenderMessages]);
 
     const handleDelete = async () => {
         if(convoOwner) {
@@ -136,7 +105,7 @@ function ConvoPage() {
         }
     }
 
-    if(isLoading) return (<p>Loading...</p>);
+    if(isRendering) return (<p>Loading...</p>);
 
     return(
         <div>
@@ -154,33 +123,7 @@ function ConvoPage() {
                     </div>
                 )
             })}
-            {messages && messages.length === 0 ? <p>No messages yet</p>
-            :
-                messages.map((message) => {
-                    return (
-                        <div key={message._id}>
-                            <p>{message.message}</p>
-                            <div>
-                                <p>{message.username}</p>
-                                <p>{message.timestamp}</p>
-                            </div>
-                        </div>
-                    )
-                })
-            }
-            <div></div>
-            <h2>Send a message</h2>
-            <div>
-                <form onSubmit={handleSubmit}>
-                    <input 
-                        type="text"
-                        id="message"
-                        value={message}
-                        onChange={handleMessageChange}
-                    />
-                    {messageLoading ? <p>Sending...</p> : <button>Send</button>}
-                </form>
-            </div>
+            <MessageDisplayComponent initialMessages={messages} mongoId={mongoId} />
         </div>
     )
 }
