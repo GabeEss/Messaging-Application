@@ -49,19 +49,17 @@ router.put("/convo/:id/leave", convo_controller.convo_leave);
 /// MESSAGE ROUTES ///
 
 router.post("/convo/:id", message_controller.message_create_post);
-router.delete("/convo/:id/message/:id", message_controller.message_delete);
-router.put("/convo/:id/message/:id", message_controller.message_update);
+router.delete("/convo/:id/message", message_controller.message_delete);
+router.put("/convo/:id/message", message_controller.message_update);
 
 /// USER ROUTES ///
 
-router.get("/users", user_controller.user_list);
 router.get("/user", user_controller.user_detail);
 router.get("/user/friends", user_controller.user_friends_get);
 router.put("/user/friends/add", user_controller.user_friend_add);
 router.put("/user/friends/remove", user_controller.user_friend_remove);
 router.put("/user", user_controller.user_update);
 router.post("/user/register", user_controller.user_create_post);
-router.post("/user/password/change", user_controller.user_password_change_post);
 router.delete("/user", user_controller.user_delete);
 
 module.exports = router;

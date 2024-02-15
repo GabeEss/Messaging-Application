@@ -69,12 +69,14 @@ exports.convo_detail = asyncHandler(async (req, res, next) => {
           success: true,
           convo: convo,
           owner: true,
+          mongoId: mongoUser._id,
         });
       }
       // console.log("Authorized user");
       return res.status(200).json({
         success: true,
         convo: convo,
+        mongoId: mongoUser._id,
       });
     }
   }
@@ -213,6 +215,15 @@ exports.convo_title_update = asyncHandler(async (req, res, next) => {
       success: false,
       message: 'Convo not found',
     });
+  }
+
+  const isMember = convo.users.some(user => user.toString() === mongoUser._id.toString());
+
+  if(!isMember) {
+    return res.status(403).json({
+      success: false,
+      message: 'You are not authorized to update this conversation',
+    })
   }
 
   let updatedTitle = req.body.title;

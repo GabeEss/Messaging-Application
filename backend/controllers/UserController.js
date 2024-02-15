@@ -6,11 +6,6 @@ exports.index = asyncHandler(async(req, res, next) => {
     res.send("NOT IMPLEMENTED: Home");
 });
 
-// Display list of all users.
-exports.user_list = asyncHandler(async (req, res, next) => {
-  res.send("NOT IMPLEMENTED: User list");
-});
-
 // Display detail page for a specific user.
 exports.user_detail = asyncHandler(async (req, res, next) => {
   res.send(`NOT IMPLEMENTED: User detail: ${req.params.id}`);
@@ -53,11 +48,6 @@ exports.user_create_post = asyncHandler(async (req, res, next) => {
 // Handle user update information on PUT.
 exports.user_update = asyncHandler(async (req, res, next) => {
   res.send("NOT IMPLEMENTED: User update PUT");
-});
-
-// Handle user password change on POST.
-exports.user_password_change_post = asyncHandler(async (req, res, next) => {
-  res.send("NOT IMPLEMENTED: User password change POST");
 });
 
 // Handle user delete on DELETE.
