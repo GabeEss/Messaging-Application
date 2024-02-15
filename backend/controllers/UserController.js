@@ -1,6 +1,7 @@
 const User = require('../models/user');
 const asyncHandler = require("express-async-handler");
 const getUserInfo = require("../utils/getUserInfo");
+const userInfoNoAPI = require("../utils/getUserInfoNoAPI");
 
 exports.index = asyncHandler(async(req, res, next) => {
     res.send("NOT IMPLEMENTED: Home");

@@ -2,16 +2,14 @@ const Message = require("../models/message");
 const Convo = require("../models/convo");
 const User = require("../models/user");
 const { DateTime } = require("luxon");
+const mongoose = require('mongoose');
 const asyncHandler = require("express-async-handler");
 const getUserInfo = require("../utils/getUserInfo");
 const userInfoNoAPI = require("../utils/getUserInfoNoAPI");
 
 // Handle message create on POST.
 exports.message_create_post = asyncHandler(async (req, res, next) => {
-  // Parse the 'X-User' header to get the user object
-  const user = JSON.parse(req.headers['x-user']);
-  const userId = user.sub;
-  const mongoUser = await User.findOne({ auth0id: userId }).exec(); // MongoDB user
+  const mongoUser = await userInfoNoAPI(req.headers['x-user']);
 
   if (!mongoUser) {
     return res.status(401).json({
@@ -34,7 +32,9 @@ exports.message_create_post = asyncHandler(async (req, res, next) => {
   // Check if user is authorized to access this conversation
   for(let i = 0; i < convo.users.length; i++) {
     if(convo.users[i].toString() == mongoUser._id.toString()) {
+      const session = await mongoose.startSession();
       try {
+        session.startTransaction();
         // console.log("Authorized to message");
         const newMessage = new Message({
           message: message,
@@ -44,9 +44,10 @@ exports.message_create_post = asyncHandler(async (req, res, next) => {
           username: mongoUser.username,
         });
       
-        await newMessage.save();
+        await newMessage.save({ session });
         convo.messages.push(newMessage);
-        await convo.save();
+        await convo.save( { session } );
+        await session.commitTransaction();
       
         return res.status(201).json({
           success: true,
@@ -54,8 +55,11 @@ exports.message_create_post = asyncHandler(async (req, res, next) => {
           convo: convo,
         });
       } catch (error) {
+        session.abortTransaction();
         console.log('Error:', error.message);
         return res.status(500).json({success: false, message: 'Error sending message'});
+      } finally {
+        session.endSession();
       }
     }
   }

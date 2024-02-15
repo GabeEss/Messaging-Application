@@ -5,13 +5,11 @@ const { DateTime } = require("luxon");
 const asyncHandler = require("express-async-handler");
 const mongoose = require('mongoose');
 const getUserInfo = require("../utils/getUserInfo");
+const userInfoNoAPI = require("../utils/getUserInfoNoAPI");
 
 // Display list of all convos.
 exports.convo_list = asyncHandler(async (req, res, next) => {
-  // Parse the 'X-User' header to get the user object
-  const user = JSON.parse(req.headers['x-user']);
-  const userId = user.sub;
-  const mongoUser = await User.findOne({ auth0id: userId }).exec(); // MongoDB user
+  const mongoUser = await userInfoNoAPI(req.headers['x-user']);
 
   if (!mongoUser) {
     return res.status(401).json({
@@ -39,10 +37,7 @@ exports.convo_list = asyncHandler(async (req, res, next) => {
 
 // Display detail page for a specific convo.
 exports.convo_detail = asyncHandler(async (req, res, next) => {
-  // Parse the 'X-User' header to get the user object
-  const user = JSON.parse(req.headers['x-user']);
-  const userId = user.sub;
-  const mongoUser = await User.findOne({ auth0id: userId }).exec(); // MongoDB user
+  const mongoUser = await userInfoNoAPI(req.headers['x-user']);
 
   if (!mongoUser) {
     return res.status(401).json({
@@ -90,10 +85,7 @@ exports.convo_detail = asyncHandler(async (req, res, next) => {
 // Handle convo create on POST.
 exports.convo_create_post = asyncHandler(async (req, res, next) => {
   console.log("Creating convo");
-  // Parse the 'X-User' header to get the user object
-  const user = JSON.parse(req.headers['x-user']);
-  const userId = user.sub;
-  const mongoUser = await User.findOne({ auth0id: userId }).exec(); // MongoDB user
+  const mongoUser = await userInfoNoAPI(req.headers['x-user']);
 
   if(!mongoUser) {
     return res.status(401).json({
@@ -128,10 +120,7 @@ exports.convo_create_post = asyncHandler(async (req, res, next) => {
 
 // Handle convo delete on DELETE.
 exports.convo_delete = asyncHandler(async (req, res, next) => {
-  // Parse the 'X-User' header to get the user object
-  const user = JSON.parse(req.headers['x-user']);
-  const userId = user.sub;
-  const mongoUser = await User.findOne({ auth0id: userId }).exec(); // MongoDB user
+  const mongoUser = await userInfoNoAPI(req.headers['x-user']);
 
   if (!mongoUser) {
     return res.status(401).json({
@@ -196,10 +185,7 @@ exports.convo_delete = asyncHandler(async (req, res, next) => {
 
 // Handle convo update on PUT.
 exports.convo_title_update = asyncHandler(async (req, res, next) => {
-  // Parse the 'X-User' header to get the user object
-  const user = JSON.parse(req.headers['x-user']);
-  const userId = user.sub;
-  const mongoUser = await User.findOne({ auth0id: userId }).exec(); // MongoDB user
+  const mongoUser = await userInfoNoAPI(req.headers['x-user']);
 
   if (!mongoUser) {
     return res.status(401).json({
@@ -247,10 +233,7 @@ exports.convo_title_update = asyncHandler(async (req, res, next) => {
 
 // Handle convo user add on PUT.
 exports.convo_add_friend = asyncHandler(async (req, res, next) => {
-  // Parse the 'X-User' header to get the user object
-  const user = JSON.parse(req.headers['x-user']);
-  const userId = user.sub;
-  const mongoUser = await User.findOne({ auth0id: userId }).exec(); // MongoDB user
+  const mongoUser = await userInfoNoAPI(req.headers['x-user']);
 
   if (!mongoUser) {
     return res.status(401).json({
@@ -330,10 +313,7 @@ exports.convo_add_friend = asyncHandler(async (req, res, next) => {
 
 // Handle convo user remove on PUT.
 exports.convo_remove_friend = asyncHandler(async (req, res, next) => {
-  // Parse the 'X-User' header to get the user object
-  const user = JSON.parse(req.headers['x-user']);
-  const userId = user.sub;
-  const mongoUser = await User.findOne({ auth0id: userId }).exec(); // MongoDB user
+  const mongoUser = await userInfoNoAPI(req.headers['x-user']);
 
   if (!mongoUser) {
     return res.status(401).json({
@@ -401,10 +381,7 @@ exports.convo_remove_friend = asyncHandler(async (req, res, next) => {
 });
 
 exports.convo_leave = asyncHandler(async (req, res, next) => {
-  // Parse the 'X-User' header to get the user object
-  const user = JSON.parse(req.headers['x-user']);
-  const userId = user.sub;
-  const mongoUser = await User.findOne({ auth0id: userId }).exec(); // MongoDB user
+  const mongoUser = await userInfoNoAPI(req.headers['x-user']);
 
   if (!mongoUser) {
     return res.status(401).json({
