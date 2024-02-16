@@ -1,7 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { useAuth0 } from '@auth0/auth0-react';
 import { makeAuthenticatedRequest } from '../utils/makeAuthRequest';
-import axios from 'axios';
 
 function HomePage() {
     const {
@@ -11,37 +10,10 @@ function HomePage() {
         user,
         getAccessTokenSilently
     } = useAuth0();
-
     const navigate = useNavigate();
-
-    const callApi = () => {
-        axios.get(`${import.meta.env.VITE_API_URL}`)
-            .then((res) => {
-                console.log(res.data);
-            })
-            .catch((err) => {
-                console.log(err);
-            });
-    }
-    
-    const callProtectedApi = async () => {
-        try {
-            const response = await makeAuthenticatedRequest(
-                getAccessTokenSilently,
-                'get',
-                `${import.meta.env.VITE_API_URL}/protected`
-                , {},
-                { user }
-            );
-            console.log(response.data);
-        } catch (error) {
-            console.log(error.message);
-        }
-    }
 
     const popupAndRegister = () => {
         loginWithPopup().then(() => {
-            console.log('logged in');
         }).then(async () => {
             try {
                 const response = await makeAuthenticatedRequest(
@@ -97,12 +69,6 @@ function HomePage() {
                 <button onClick={popupAndRegister}>Login / Signup with Popup</button>
             </div>
         ) }
-      </div>
-      <div>
-        <ul>
-            <li><button onClick={callApi}>Call API Route</button></li>
-            <li><button onClick={callProtectedApi}>Call Protected Route</button></li>
-        </ul>
       </div>
     </div>
   );

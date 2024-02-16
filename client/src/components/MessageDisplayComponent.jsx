@@ -94,7 +94,6 @@ function MessageDisplayComponent({ initialMessages, mongoId }) {
                                 : deleteMessageClick && messageToDelete === message._id ?
                                     <DeleteMessageComponent 
                                         messageId={messageToDelete}
-                                        messageText={message.message}
                                         onDeleteDone={handleDeleteDone}/>
                                 : <p>{message.message}</p>}
                                 <div>

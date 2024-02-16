@@ -10,7 +10,7 @@ function ConvoPage() {
     const [convoDate, setConvoDate] = useState("");
     const [convoOwner, setConvoOwner] = useState(false); // The convo owner can add/remove users
     const [notOwner, setNotOwner] = useState(false); // Can send messages and leave the convo
-    const [mongoId, setMongoId] = useState(""); // The mongoId of the convo
+    const [mongoId, setMongoId] = useState(""); // The mongoId of the current user
     const [users, setUsers] = useState([]);
     const [messages, setMessages] = useState([]);
     const [isRendering, setIsRendering] = useState(true);
