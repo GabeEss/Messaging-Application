@@ -4,8 +4,8 @@ const Message = require("../models/message");
 const { DateTime } = require("luxon");
 const asyncHandler = require("express-async-handler");
 const mongoose = require('mongoose');
-const getUserInfo = require("../utils/getUserInfo");
 const userInfoNoAPI = require("../utils/getUserInfoNoAPI");
+// const getUserInfo = require("../utils/getUserInfo");
 
 // Display list of all convos.
 exports.convo_list = asyncHandler(async (req, res, next) => {

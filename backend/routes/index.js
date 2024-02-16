@@ -1,37 +1,10 @@
 require('dotenv').config();
 const express = require('express');
 const router = express.Router();
-const axios = require('axios');
 
 const convo_controller = require('../controllers/ConvoController');
 const message_controller = require('../controllers/MessageController');
 const user_controller = require('../controllers/UserController');
-
-/// GET home page. ///
-router.get('/', (req, res) => {
-    res.send("Hello from index route.");
-});
-
-router.get('/protected', async (req, res) => {
-    try {
-        const authHeader = req.headers.authorization;
-        if (!authHeader || !authHeader.includes(' ')) {
-            throw new Error('Invalid authorization header');
-        }
-        const accessToken = authHeader.split(" ")[1];
-        const response = await axios.get(process.env.AUTH_ISSUER + "/userinfo", {
-            headers: {
-                Authorization: `Bearer ${accessToken}`,
-            },
-        });
-        const userInfo = response.data;
-        res.send("Hello from protected route.");
-        console.log(userInfo);
-    } catch (error) {
-        console.log('Error:', error.message);
-        res.status(401).send("Unauthorized:" + error.message);
-    }
-});
 
 // router.get('/', user_controller.index);
 
