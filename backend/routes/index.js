@@ -31,12 +31,12 @@ router.put("/convo/:id/message", message_controller.message_update);
 
 /// USER ROUTES ///
 
+router.post("/user/register", user_controller.user_create_post);
 router.get("/user", user_controller.user_detail);
 router.get("/user/friends", user_controller.user_friends_get);
 router.put("/user/friends/add", user_controller.user_friend_add);
 router.put("/user/friends/remove", user_controller.user_friend_remove);
-router.put("/user", user_controller.user_update);
-router.post("/user/register", user_controller.user_create_post);
+router.put("/user/username", user_controller.user_update);
 router.delete("/user", user_controller.user_delete);
 
 module.exports = router;

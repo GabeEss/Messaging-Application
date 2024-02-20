@@ -53,7 +53,26 @@ exports.user_create_post = asyncHandler(async (req, res, next) => {
 
 // Handle user update information on PUT.
 exports.user_update = asyncHandler(async (req, res, next) => {
-  res.send("NOT IMPLEMENTED: User update PUT");
+    const mongoUser = await userInfoNoAPI(req.headers['x-user']);
+
+    if(!mongoUser) {
+      return res.status(404).json({success: false, message: 'User not found'});
+    }
+
+    const newUsername = req.body.username;
+
+    if(!newUsername) {
+      return res.status(400).json({success: false, message: 'Username not found'});
+    }
+
+    try {
+      mongoUser.username = newUsername;
+      await mongoUser.save();
+
+      return res.status(200).json({success: true, message: 'Username updated successfully'});
+    } catch (error) {
+      return res.status(500).json({success: false, message: 'Error updating username'});
+    }
 });
 
 // Handle user delete on DELETE.
