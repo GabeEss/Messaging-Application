@@ -1,42 +1,19 @@
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth0 } from '@auth0/auth0-react';
 import { makeAuthenticatedRequest } from '../utils/makeAuthRequest';
 
 function HomePage() {
+    const [userMongo, setUserMongo] = useState({});
     const {
-        loginWithPopup,
         logout,
         isAuthenticated,
         user,
-        getAccessTokenSilently
+        getAccessTokenSilently,
+        isLoading
     } = useAuth0();
-    const navigate = useNavigate();
 
-    const popupAndRegister = () => {
-        loginWithPopup().then(() => {
-        }).then(async () => {
-            try {
-                const response = await makeAuthenticatedRequest(
-                    getAccessTokenSilently,
-                    'post',
-                    `${import.meta.env.VITE_API_URL}/user/register`,
-                    {},
-                    { user }
-                );
-                if (response.data.success === true) {
-                    console.log('User registered');
-                }
-            } catch (error) {
-                if (error.response && error.response.status === 401) {
-                    console.log(error.response.data.message);
-                } else {
-                    console.log(error.message);
-                }
-            }
-        }).catch((error) => {
-            console.error('error', error);
-        });
-    }
+    const navigate = useNavigate();
 
     const goToFriends = async () => {
         navigate('/user/friends');
@@ -46,29 +23,54 @@ function HomePage() {
         navigate('/convos');
     }
 
+    const goToUserOptions = async () => {
+        navigate('/user');
+    }
+
+    const getUser = async () => {
+        try {
+            const response = await makeAuthenticatedRequest(
+                getAccessTokenSilently,
+                'get',
+                `${import.meta.env.VITE_API_URL}/user`,
+                {},
+                { user }
+            );
+            if(response.data.success === true) {
+                setUserMongo(response.data.user);
+            }
+        } catch (error) {
+            if (error.response && error.response.status === 401) {
+                console.log(error.response.data.message);
+            } else {
+                console.log(error.message);
+            }
+        }
+    }
+
+    useEffect(() => {
+        if(isAuthenticated) {
+            getUser();
+        }
+    }, [isAuthenticated]);
+
+
+    if(isLoading) return (<p>Loading...</p>);
+    
   return (
     <div>
       <h1>Welcome to Messaging Application!</h1>
       <div>
-        {isAuthenticated ? (
-            <>
-                <div>You are logged in!</div>
-                <button onClick={() => logout({ returnTo: window.location.origin })}>
-                Log out
-                </button>
-                <div>
-                <img src={user.picture} alt={user.name} />
-                <h2>{user.name}</h2>
-                <p>{user.email}</p>
-                </div>
-                <button onClick={goToFriends}>Friends List</button>
-                <button onClick={goToConvos}>Conversations</button>
-            </>
-            ) : (
+            <div>You are logged in!</div>
+            <button onClick={() => logout({ returnTo: window.location.origin })}>
+            Log out
+            </button>
             <div>
-                <button onClick={popupAndRegister}>Login / Signup with Popup</button>
+            <h2>{userMongo.username}</h2>
             </div>
-        ) }
+            <button onClick={goToFriends}>Friends List</button>
+            <button onClick={goToConvos}>Conversations</button>
+            <button onClick={goToUserOptions}>User Options</button>
       </div>
     </div>
   );

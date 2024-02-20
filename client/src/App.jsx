@@ -4,7 +4,10 @@ import { RenderMessagesProvider } from './contexts/RenderMessagesContext';
 import ProtectedRoute from './auth/protected-route';
 import Sidebar from './components/SideBar';
 import MainDisplay from './components/MainDisplay';
+import LoginPage from './pages/LoginPage';
 import HomePage from './pages/HomePage';
+import UserOptionsPage from './pages/UserOptionsPage';
+import DeleteUserPage from './pages/DeleteUserPage';
 import FriendPage from './pages/FriendPage';
 import ConvosPage from './pages/ConvosPage';
 import ConvoPage from './pages/ConvoPage';
@@ -28,7 +31,10 @@ function App() {
         <Sidebar />
         <MainDisplay>
           <Routes>
-            <Route path="/" element={<HomePage/>}/>
+            <Route path="/" element={<LoginPage/>}/>
+            <Route path="/home" element={<ProtectedRoute><HomePage/></ProtectedRoute>}/>
+            <Route path="/user" element={<ProtectedRoute><UserOptionsPage/></ProtectedRoute>}/>
+            <Route path="/user/delete" element={<ProtectedRoute><DeleteUserPage/></ProtectedRoute>}/>
             <Route path="/user/friends" element={<ProtectedRoute><FriendPage/></ProtectedRoute>}/>
             <Route path='/convos' element={<ProtectedRoute><ConvosPage/></ProtectedRoute>}/>
             <Route path='/convo/:id' element={<ProtectedRoute><ConvoPage/></ProtectedRoute>}/>

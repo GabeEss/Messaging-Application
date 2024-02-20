@@ -103,7 +103,6 @@ function MessageDisplayComponent({ initialMessages, mongoId }) {
                                 <div>
                                     {message.senderId.toString() === mongoId.toString() ? 
                                     <div>
-                                        {/* Send the message that gets clicked to the component. */}
                                         <button onClick={() => handleEditMessage(message._id)}>
                                             Edit Message</button>
                                         <button onClick={() => handleDeleteMessage(message._id)}>
