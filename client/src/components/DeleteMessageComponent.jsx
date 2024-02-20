@@ -29,11 +29,7 @@ function DeleteMessageComponent ({messageId, onDeleteDone}) {
                     onDeleteDone();
                 }
             } catch (error) {
-                if (error.response && error.response.status === 401) {
-                    console.log(error.response.data.message);
-                } else {
-                    console.log(error.message);
-                }
+                console.log(error.response.data.message);
             }
         }
     }
