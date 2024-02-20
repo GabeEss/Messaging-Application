@@ -20,12 +20,16 @@ function UserOptionsPage() {
         if(isAuthenticated) navigate('/user/delete');
     }
 
+    const handleChange = async () => {
+        if(isAuthenticated) navigate('/user/change');
+    }
+
     return (
         <div>
             <h1>User Options</h1>
             <button onClick={handleFriends}>See Friends</button>
             <button onClick={handleConvos}>See Conversations</button>
-            <button>Change User Information</button>
+            <button onClick={handleChange}>Change User Information</button>
             <button onClick={handleDelete}>Delete User</button>
             <button onClick={() => logout({ returnTo: window.location.origin })}>
             Log out

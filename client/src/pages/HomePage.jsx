@@ -61,13 +61,11 @@ function HomePage() {
     <div>
       <h1>Welcome to Messaging Application!</h1>
       <div>
+            <h2>{userMongo.username}</h2>
             <div>You are logged in!</div>
             <button onClick={() => logout({ returnTo: window.location.origin })}>
             Log out
             </button>
-            <div>
-            <h2>{userMongo.username}</h2>
-            </div>
             <button onClick={goToFriends}>Friends List</button>
             <button onClick={goToConvos}>Conversations</button>
             <button onClick={goToUserOptions}>User Options</button>
