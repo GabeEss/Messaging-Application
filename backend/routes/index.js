@@ -6,8 +6,6 @@ const convo_controller = require('../controllers/ConvoController');
 const message_controller = require('../controllers/MessageController');
 const user_controller = require('../controllers/UserController');
 
-// router.get('/', user_controller.index);
-
 /// CONVO ROUTES ///
 
 router.get("/convos", convo_controller.convo_list);
