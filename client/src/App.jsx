@@ -17,6 +17,7 @@ import AddRemoveForm from './pages/AddRemoveFormPage';
 import DeleteConvo from './pages/DeleteConvoFormPage';
 import EditTitleFormPage from './pages/EditTitleFormPage';
 import LoadingPage from './pages/LoadingPage';
+import ErrorPage from './pages/ErrorPage';
 
 function App() {
   const { isLoading } = useAuth0();
@@ -32,6 +33,7 @@ function App() {
         <MainDisplay>
           <Routes>
             <Route path="/" element={<LoginPage/>}/>
+            <Route path="/error" element={<ErrorPage/>}/>
             <Route path="/home" element={<ProtectedRoute><HomePage/></ProtectedRoute>}/>
             <Route path="/user" element={<ProtectedRoute><UserOptionsPage/></ProtectedRoute>}/>
             <Route path="/user/delete" element={<ProtectedRoute><DeleteUserPage/></ProtectedRoute>}/>
