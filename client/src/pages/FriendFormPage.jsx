@@ -44,18 +44,20 @@ function FriendForm() {
     };
 
     return (
-        <div>
-            <h1>Add/Remove Friend</h1>
-            <form onSubmit={handleSubmit}>
-                <label htmlFor="username">Username (email)</label>
+        <div className='friend-form-page'>
+            <h1 className='form-heading'>Add/Remove Friend</h1>
+            <form className='friend-form' onSubmit={handleSubmit}>
+                <label className='username-label' htmlFor="username">Username (email)</label>
                 <input 
+                    className='username-input'
                     type="text"
                     id="username"
                     value={username}
                     onChange={handleUsernameChange}
                 />
-                <div>
+                <div className='action-section'>
                     <input
+                        className='action-input'
                         type="radio"
                         id="add"
                         name="action"
@@ -63,8 +65,9 @@ function FriendForm() {
                         checked={action==='add'}
                         onChange={(e) => setAction(e.target.value)}
                     />
-                    <label htmlFor="add">Add</label>
+                    <label className='action-label' htmlFor="add">Add</label>
                     <input 
+                        className='action-input'
                         type="radio"
                         id="remove"
                         name="action"
@@ -72,9 +75,9 @@ function FriendForm() {
                         checked={action === 'remove'}
                         onChange={(e) => setAction(e.target.value)}
                     />
-                <label htmlFor="remove">Remove Friend</label>
+                <label className='action-label' htmlFor="remove">Remove Friend</label>
                 </div>
-                <button type="submit">Confirm</button>
+                <button className='confirm-button' type="submit">Confirm</button>
             </form>
         </div>
     )

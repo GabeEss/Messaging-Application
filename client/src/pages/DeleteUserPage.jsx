@@ -42,20 +42,23 @@ function DeleteUserPage() {
     }
 
     return (
-        <div>
-            <h1>Delete User</h1>
-            {isLoading ? <p>Loading...</p> 
+        <div className="delete-user-page section">
+            <h1 className="delete-user-heading">Delete User</h1>
+            {isLoading ? <h1 className='loading-heading'>Loading...</h1> 
             :
-            <div> 
-                <form onSubmit={handleSubmit}>
-                    <label htmlFor="confirmDelete">Confirm deletion</label>
-                    <input type='checkbox' id='confirmDelete' required />
-                    <button type="submit">Delete</button>
+            <div className='delete-section'> 
+                <form className='delete-form' onSubmit={handleSubmit}>
+                    <label className="confirm-label" htmlFor="confirmDelete">Confirm deletion</label>
+                    <input className="confirm-input" type='checkbox' id='confirmDelete' required />
+                    <div className='form-buttons'>
+                        <button className='confirm-button' type="submit">Delete</button>
+                        <button className='cancel-button' onClick={() => navigate('/user')}>Cancel</button>
+                    </div>
                 </form>
                 <br />
-                <p>You are about to delete your profile on Messaging Application.</p>
-                <p>This will not delete your auth0 account; in other words, you can still login with the same email and password and a new account will be created.</p>
-                <button onClick={() => navigate('/user')}>Cancel</button>
+                <p className='delete-warning'>You are about to delete your profile on Messaging Application.</p>
+                <p className='delete-note'>This will not delete your auth0 account; in other words, you can still login with the same email and password and a new account will be created.</p>
+                
             </div>
             }    
         </div>

@@ -41,21 +41,25 @@ function ChangeInfoFormPage() {
     }
 
   return (
-    <div>
-        <h1>Change User Information</h1>
-        <form onSubmit={handleSubmit}>
-            <label htmlFor="username">Username</label>
+    <div className='change-info-page section'>
+        <h1 className='change-info-header'>Change User Information</h1>
+        <form className='change-info-form' onSubmit={handleSubmit}>
+            <label className="username-label" htmlFor="username">Username</label>
             <input 
+                className='username-input'
                 type="text"
                 id="username"
                 value={username}
                 onChange={handleUsernameChange}
+                maxLength={16}
                 required
             />
-            <button type="submit">Change</button>
-        </form>
-        <p>This will not change your name from prior messages.</p>
-        <button onClick={handleCancel}>Cancel</button>
+            <div className='form-buttons'>
+                <button className='confirm-button' type="submit">Change</button>
+                <button className='cancel-button' onClick={handleCancel}>Cancel</button>
+            </div>
+        </form>        
+        <p className='change-info-note'>This will not change your name from prior messages. Max 16 characters.</p>
     </div>
   );
 }

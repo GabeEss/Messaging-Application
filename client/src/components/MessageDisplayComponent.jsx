@@ -76,12 +76,12 @@ function MessageDisplayComponent({ initialMessages, mongoId }) {
     }
 
     return(
-        <div>
-            {messages && messages.length === 0 ? <p>No messages yet</p>
+        <div className='message-display-component'>
+            {messages && messages.length === 0 ? <h1 className='no-messages-heading'>No messages yet</h1>
                 :
                     messages.map((message) => {
                         return (
-                            <div key={message._id}>
+                            <div className="message-container" key={message._id}>
                                 {editMessageClick && messageToEdit === message._id ?
                                     <EditMessageComponent
                                         messageId={messageToEdit}
@@ -92,16 +92,16 @@ function MessageDisplayComponent({ initialMessages, mongoId }) {
                                         messageId={messageToDelete}
                                         onDeleteDone={handleDeleteDone}/>
                                 : <p>{message.message}</p>}
-                                <div>
-                                    <p>{message.username}</p>
-                                    <p>{message.timestamp}</p>
+                                <div className="message-details">
+                                    <p className='message-text'>{message.username}</p>
+                                    <p className='message-date'>{message.timestamp}</p>
                                 </div>
-                                <div>
+                                <div className="change-message-section">
                                     {message.senderId.toString() === mongoId.toString() ? 
                                     <div>
-                                        <button onClick={() => handleEditMessage(message._id)}>
+                                        <button className='edit-message-button' onClick={() => handleEditMessage(message._id)}>
                                             Edit Message</button>
-                                        <button onClick={() => handleDeleteMessage(message._id)}>
+                                        <button className='delete-message-button' onClick={() => handleDeleteMessage(message._id)}>
                                             Delete Message</button>
                                     </div>
                                     : null}
@@ -110,17 +110,19 @@ function MessageDisplayComponent({ initialMessages, mongoId }) {
                         )
                     })
                 }
-                <div></div>
-                <h2>Send a message</h2>
-                <div>
-                    <form onSubmit={handleSubmit}>
+                <br></br>
+                <div className='send-message-section'>
+                    <h2 className='send-message-heading'>Send a message</h2>
+                    <form className='send-message-form' onSubmit={handleSubmit}>
                         <input 
+                            className='message-input'
                             type="text"
                             id="message"
                             value={message}
+                            maxLength={60}
                             onChange={handleMessageChange}
                         />
-                        {messageLoading ? <p>Sending...</p> : <button>Send</button>}
+                        <button disabled={messageLoading} className="create-button" type="submit">Send</button>
                     </form>
                 </div>
             </div>

@@ -51,20 +51,21 @@ function HomePage() {
     }, [isAuthenticated]);
 
 
-    if(isLoading) return (<p>Loading...</p>);
+    if(isLoading) return (<h2 className='loading-heading'>Loading...</h2>);
     
   return (
-    <div>
-      <h1>Welcome to Messaging Application!</h1>
-      <div>
-            <h2>{userMongo.username}</h2>
-            <div>You are logged in!</div>
-            <button onClick={() => logout({ returnTo: window.location.origin })}>
-            Log out
-            </button>
-            <button onClick={goToFriends}>Friends List</button>
-            <button onClick={goToConvos}>Conversations</button>
-            <button onClick={goToUserOptions}>User Options</button>
+    <div className='home-page section'>
+      <h1 className='home-heading'>Welcome to Messaging Application!</h1>
+      <div className='user-section'>
+            <h2 className='username'>{`Hello, ${userMongo.username}`}</h2>
+            <div className='home-buttons'>
+                <button className='logout-button' onClick={() => logout({ returnTo: window.location.origin })}>
+                Log out
+                </button>
+                <button className='friends-button' onClick={goToFriends}>Friends List</button>
+                <button className='convos-button' onClick={goToConvos}>Conversations</button>
+                <button className='options-button' onClick={goToUserOptions}>User Options</button>
+            </div>
       </div>
     </div>
   );

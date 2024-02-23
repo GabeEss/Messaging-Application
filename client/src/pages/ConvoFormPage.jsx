@@ -46,17 +46,20 @@ function ConvoForm() {
 
     
     return (
-        <div>
-            <h1>Create a Conversation</h1>
-            <form onSubmit={handleSubmit}>
-                <label htmlFor="title">Title</label>
+        <div className='convo-form-page'>
+            <h1 className='convo-form-heading'>Create a Conversation</h1>
+            <form className='convo-form' onSubmit={handleSubmit}>
+                <label className="title-label" htmlFor="title">Title</label>
                 <input 
+                    className='title-input'
                     type="text"
                     id="title"
                     value={title}
                     onChange={handleTitleChange}
+                    maxLength={16}
                 />
-                {isLoading ? <p>Creating...</p> : <button>Create</button>}
+                <p>16 characters maximum.</p>
+                <button disabled={isLoading} className="create-button" type="submit">Create</button>
             </form>
         </div>
     )

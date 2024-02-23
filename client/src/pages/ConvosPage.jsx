@@ -50,23 +50,23 @@ function ConvosPage() {
         navigate(`/convo/${convoId}`);
     }
 
-    if(isLoading) return (<p>Loading...</p>);
+    if(isLoading) return (<h2 className='loading-heading'>Loading...</h2>);
 
     return(
-        <div>
+        <div className="convos-page section">
             {conversations && conversations.length === 0 ? <p>No conversations found</p>
             :
                 conversations.map((convo) => {
                     return (
                         <div key={convo._id}>
-                            <button onClick={() => handleConvo(convo._id)}>{convo.title}</button>
+                            <button className="convo-button" onClick={() => handleConvo(convo._id)}>{convo.title}</button>
                         </div>
                     )
                 })
             }
             <br></br>
-            <div>
-                <button onClick={handleNewConvo}>New Conversation</button>
+            <div className='new-convo-section'>
+                <button className="new-convo-button" onClick={handleNewConvo}>New Conversation</button>
             </div>
         </div>
     )

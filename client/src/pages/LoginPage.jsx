@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth0 } from '@auth0/auth0-react';
 import { makeAuthenticatedRequest } from '../utils/makeAuthRequest';
@@ -35,29 +34,23 @@ function LoginPage() {
         });
     }
 
-    useEffect(() => {
-        if(isAuthenticated) {
-            navigate('/home');
-        }
-    }, [isAuthenticated]);
-
     const handleHome = () => {
         if(isAuthenticated)
             navigate('/home');
     }
 
     return(
-        <div>
+        <div className='login-page'>
             {!isAuthenticated ? 
-                <div>
-                    <h1>Login Page</h1>
-                    <button onClick={popupAndRegister}>Login</button>
+                <div className='login-section section'>
+                    <h1 className='login-heading'>Messaging Application Login Page</h1>
+                    <button className='login-button' onClick={popupAndRegister}>Login</button>
                 </div>
             : 
-                <div>
-                    <h1>Welcome to Messaging Application!</h1>
-                    <button onClick={handleHome}>Go to home page</button>
-                    <button onClick={() => logout({ returnTo: window.location.origin })}>
+                <div className='welcome-section section'>
+                    <h1 className='welcome-heading'>Welcome to Messaging Application!</h1>
+                    <button className='home-button' onClick={handleHome}>Go to home page</button>
+                    <button className='logout-button' onClick={() => logout({ returnTo: window.location.origin })}>
                     Log out
                     </button>
                 </div>

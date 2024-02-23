@@ -1,13 +1,12 @@
 import PropTypes from 'prop-types';
 import { useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { makeAuthenticatedRequest } from "../utils/makeAuthRequest";
 import { useAuth0 } from '@auth0/auth0-react';
 
 function EditMessageComponent ({ messageId, messageText, onEditDone }) {
     const [message, setMessage] = useState(messageText);
     const [isLoading, setIsLoading] = useState(false);
-    const navigate = useNavigate();
     const {
         getAccessTokenSilently,
         user,
@@ -44,23 +43,24 @@ function EditMessageComponent ({ messageId, messageText, onEditDone }) {
         setIsLoading(true);
         await editMessage();
         setIsLoading(false);
-        navigate(`/convo/${id}`);
     }
 
     return (
-        <div className='popup'>
-            <h1>Edit Message</h1>
-            {isLoading ? <p>Loading...</p> 
+        <div className='edit-popup'>
+            <h1 className='edit-message-heading'>Edit Message</h1>
+            {isLoading ? <h1 className='loading-heading'>Loading...</h1> 
             : 
-            <form onSubmit={handleSubmit}>
-                <label htmlFor="message">Message</label>
+            <form className='edit-message-form' onSubmit={handleSubmit}>
+                <label className='message-label' htmlFor="message">Message</label>
                 <input 
+                    className='message-input'
                     type="text"
                     id="message"
                     value={message}
                     onChange={handleTextChange}
+                    maxLength={60}
                 />
-                <button type="submit">Edit</button>
+                <button className='confirm-button' type="submit">Edit</button>
             </form>
             }      
         </div>

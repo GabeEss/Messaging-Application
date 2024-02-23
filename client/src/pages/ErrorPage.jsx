@@ -17,11 +17,11 @@ const ErrorPage = () => {
     }
 
     return (
-        <div className="error-page">
-            <h1>Error: Not connected to server</h1>
+        <div className="error-page section">
+            <h1 className='error-heading'>Error: Not connected to server</h1>
             {isAuthenticated 
-            ? <button onClick={handleLogout}>Logout</button> 
-            : <button onClick={goToLogin}>Go to login page.</button>}
+            ? <button className='logout-button' onClick={handleLogout}>Logout</button> 
+            : <button className='login-button' onClick={goToLogin}>Go to login page.</button>}
         </div>
     );
 };

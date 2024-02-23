@@ -1,12 +1,11 @@
 import PropTypes from 'prop-types';
 import { useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { makeAuthenticatedRequest } from "../utils/makeAuthRequest";
 import { useAuth0 } from '@auth0/auth0-react';
 
 function DeleteMessageComponent ({messageId, onDeleteDone}) {
     const [isLoading, setIsLoading] = useState(false);
-    const navigate = useNavigate();
     const {
         getAccessTokenSilently,
         user,
@@ -39,18 +38,17 @@ function DeleteMessageComponent ({messageId, onDeleteDone}) {
         setIsLoading(true);
         await deleteMessage();
         setIsLoading(false);
-        navigate(`/convo/${id}`);
     }
 
     return (
-        <div className='popup'>
-            <h1>Delete Message</h1>
-            {isLoading ? <p>Loading...</p> 
+        <div className='delete-popup'>
+            <h1 className='delete-message-heading'>Delete Message</h1>
+            {isLoading ? <h1 className='loading-heading'>Loading...</h1> 
             : 
-            <form onSubmit={handleSubmit}>
-                <label htmlFor="confirmDelete">Confirm deletion</label>
-                <input type='checkbox' id='confirmDelete' required />
-                <button type="submit">Delete</button>
+            <form className="delete-message-form" onSubmit={handleSubmit}>
+                <label className="delete-message-label" htmlFor="confirmDelete">Confirm deletion</label>
+                <input className='confirm-delete-checkbox' type='checkbox' id='confirmDelete' required />
+                <button className='confirm-button' type="submit">Delete</button>
             </form>
             }      
         </div>

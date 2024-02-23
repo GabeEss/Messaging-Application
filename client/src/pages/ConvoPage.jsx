@@ -97,24 +97,27 @@ function ConvoPage() {
         }
     }
 
-    if(isRendering) return (<p>Loading...</p>);
+    if(isRendering) return (<h2 className='loading-heading'>Loading...</h2>);
 
     return(
-        <div>
-            {convoTitle ? <h1>{convoTitle}</h1> : <h1>No title</h1>}
-            {convoDate ? <p>{convoDate}</p> : <p>No date</p>}
-            {convoOwner ? <button onClick={addRemoveUser}>Add/Remove a User</button> : null}
-            {convoOwner ? <button onClick={handleDelete}>Delete Convo</button> : null}
-            {notOwner ? <button onClick={leaveConvo}>Leave Convo</button> : null}
-            <button onClick={handleTitleChange}>Edit Title</button>
-            {users && users.length === 0 ? <p>No users</p>
-            : users.map((user) => {
-                return (
-                    <div key={user._id}>
-                        <p>{user.username}</p>
-                    </div>
-                )
-            })}
+        <div className="convo-page section">
+            {convoTitle ? <h1 className='convo-title'>{convoTitle}</h1> : <h1 className='no-title'>No title</h1>}
+            {convoDate ? <p className='convo-date'>{convoDate}</p> : <p className="no-date">No date</p>}
+            {convoOwner ? <button className='add-remove-button' onClick={addRemoveUser}>Add/Remove a User</button> : null}
+            {convoOwner ? <button className='delete-convo-button' onClick={handleDelete}>Delete Convo</button> : null}
+            {notOwner ? <button className='leave-convo-button' onClick={leaveConvo}>Leave Convo</button> : null}
+            <button className="edit-title-button" onClick={handleTitleChange}>Edit Title</button>
+            <div className='friends-list'>
+                <h4 className='users-label'>Users: </h4>
+                {users && users.length === 0 ? <p className='no-users'>No users</p>
+                : users.map((user) => {
+                    return (
+                        <div key={user._id}>
+                            <p className='friend-item'>{user.username}</p>
+                        </div>
+                    )
+                })}
+            </div>
             <MessageDisplayComponent initialMessages={messages} mongoId={mongoId} />
         </div>
     )

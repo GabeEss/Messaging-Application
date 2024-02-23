@@ -44,18 +44,20 @@ function AddRemoveForm() {
     }
 
     return (
-        <div>
-            <h1>Add/Remove Friend from Convo</h1>
-            <form onSubmit={handleSubmit}>
-                <label htmlFor="username">Username (email)</label>
+        <div className='add-remove-form-page'>
+            <h1 className='add-remove-heading'>Add/Remove Friend from Convo</h1>
+            <form className="add-remove-form" onSubmit={handleSubmit}>
+                <label className='username-label' htmlFor="username">Username (email)</label>
                 <input 
+                    className='username-input'
                     type="text"
                     id="username"
                     value={username}
                     onChange={handleUsernameChange}
                 />
-                <div>
+                <div className='action-section'>
                     <input
+                        className='add-action-input'
                         type="radio"
                         id="add"
                         name="action"
@@ -63,8 +65,9 @@ function AddRemoveForm() {
                         checked={action==='add'}
                         onChange={(e) => setAction(e.target.value)}
                     />
-                    <label htmlFor="add">Add</label>
+                    <label className="add-action-label" htmlFor="add">Add</label>
                     <input 
+                        className='remove-action-input'
                         type="radio"
                         id="remove"
                         name="action"
@@ -72,9 +75,9 @@ function AddRemoveForm() {
                         checked={action === 'remove'}
                         onChange={(e) => setAction(e.target.value)}
                     />
-                    <label htmlFor="remove">Remove Friend</label>
+                    <label className='remove-action-label' htmlFor="remove">Remove Friend</label>
                 </div>
-                <button type="submit">Confirm</button>
+                <button className='confirm-button' type="submit">Confirm</button>
             </form>
         </div>
     )

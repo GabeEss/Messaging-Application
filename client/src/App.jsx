@@ -25,8 +25,6 @@ import AddRemoveForm from './pages/AddRemoveFormPage';
 import DeleteConvo from './pages/DeleteConvoPage';
 import EditTitleFormPage from './pages/EditTitleFormPage';
 
-
-
 function App() {
   const { isLoading } = useAuth0();
 
@@ -37,25 +35,27 @@ function App() {
   return(
     <Router>
       <RenderMessagesProvider>
-        <Sidebar />
-        <MainDisplay>
-          <Routes>
-            <Route path="/" element={<LoginPage/>}/>
-            <Route path="/error" element={<ErrorPage/>}/>
-            <Route path="/home" element={<ProtectedRoute><HomePage/></ProtectedRoute>}/>
-            <Route path="/user" element={<ProtectedRoute><UserOptionsPage/></ProtectedRoute>}/>
-            <Route path="/user/delete" element={<ProtectedRoute><DeleteUserPage/></ProtectedRoute>}/>
-            <Route path="/user/friends" element={<ProtectedRoute><FriendPage/></ProtectedRoute>}/>
-            <Route path="/user/change" element={<ProtectedRoute><ChangeInfoFormPage/></ProtectedRoute>}/>
-            <Route path="/friend-form" element={<ProtectedRoute><FriendForm/></ProtectedRoute>}/>
-            <Route path='/convos' element={<ProtectedRoute><ConvosPage/></ProtectedRoute>}/>
-            <Route path='/convo/:id' element={<ProtectedRoute><ConvoPage/></ProtectedRoute>}/>
-            <Route path="/convo-form" element={<ProtectedRoute><ConvoForm/></ProtectedRoute>}/>
-            <Route path="convo/:id/add-remove-user" element={<ProtectedRoute><AddRemoveForm/></ProtectedRoute>}/>
-            <Route path='convo/:id/edit-title' element={<ProtectedRoute><EditTitleFormPage/></ProtectedRoute>}/>
-            <Route path="convo/:id/delete" element={<ProtectedRoute><DeleteConvo/></ProtectedRoute>}/>
-          </Routes>
-        </MainDisplay>
+        <div className="app">
+          <Sidebar />
+          <MainDisplay>
+            <Routes>
+              <Route path="/" element={<LoginPage/>}/>
+              <Route path="/error" element={<ErrorPage/>}/>
+              <Route path="/home" element={<ProtectedRoute><HomePage/></ProtectedRoute>}/>
+              <Route path="/user" element={<ProtectedRoute><UserOptionsPage/></ProtectedRoute>}/>
+              <Route path="/user/delete" element={<ProtectedRoute><DeleteUserPage/></ProtectedRoute>}/>
+              <Route path="/user/friends" element={<ProtectedRoute><FriendPage/></ProtectedRoute>}/>
+              <Route path="/user/change" element={<ProtectedRoute><ChangeInfoFormPage/></ProtectedRoute>}/>
+              <Route path="/friend-form" element={<ProtectedRoute><FriendForm/></ProtectedRoute>}/>
+              <Route path='/convos' element={<ProtectedRoute><ConvosPage/></ProtectedRoute>}/>
+              <Route path='/convo/:id' element={<ProtectedRoute><ConvoPage/></ProtectedRoute>}/>
+              <Route path="/convo-form" element={<ProtectedRoute><ConvoForm/></ProtectedRoute>}/>
+              <Route path="convo/:id/add-remove-user" element={<ProtectedRoute><AddRemoveForm/></ProtectedRoute>}/>
+              <Route path='convo/:id/edit-title' element={<ProtectedRoute><EditTitleFormPage/></ProtectedRoute>}/>
+              <Route path="convo/:id/delete" element={<ProtectedRoute><DeleteConvo/></ProtectedRoute>}/>
+            </Routes>
+          </MainDisplay>
+        </div>
       </RenderMessagesProvider>
     </Router>
   );

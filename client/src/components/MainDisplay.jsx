@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 
 function MainDisplay({ children }) {
   return (
-    <main style={{ margin: '0 auto', width: '100%', maxWidth: '800px', padding: '1em' }}>
+    <main className="main-display">
       {children}
     </main>
   );

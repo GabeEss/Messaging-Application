@@ -44,25 +44,25 @@ function FriendPage() {
         navigate('/friend-form');
     }
 
-    if(isLoading) return (<p>Loading...</p>);
+    if(isLoading) return (<h2 className='loading-heading'>Loading...</h2>);
 
     return (
-        <div>
-            <h1>Friend Page</h1>
-            <div>
+        <div className='friend-page section'>
+            <h1 className='friend-heading'> Friend Page</h1>
+            <div className='friend-list'>
             {
                 friends && friends.length === 0 ? <p>No friends found</p> 
                 : friends.map((friend) => {
                     return (
                         <div key={friend._id}>
-                        <p>{friend.username}</p>
+                            <p className='friend-item'>{friend.username}</p>
                         </div>
                     )
                 })
             }
             </div>
-            <div>
-                <button onClick={handleFriend}>Add/Remove Friend</button>
+            <div className='friend-actions'>
+                <button className='friend-button' onClick={handleFriend}>Add/Remove Friend</button>
             </div>
         </div>
     )
