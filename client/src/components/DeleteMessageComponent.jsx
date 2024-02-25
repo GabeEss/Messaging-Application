@@ -42,13 +42,17 @@ function DeleteMessageComponent ({messageId, onDeleteDone}) {
 
     return (
         <div className='delete-popup'>
-            <h1 className='delete-message-heading'>Delete Message</h1>
             {isLoading ? <h1 className='loading-heading'>Loading...</h1> 
             : 
             <form className="delete-message-form" onSubmit={handleSubmit}>
-                <label className="delete-message-label" htmlFor="confirmDelete">Confirm deletion</label>
-                <input className='confirm-delete-checkbox' type='checkbox' id='confirmDelete' required />
-                <button className='confirm-button' type="submit">Delete</button>
+                <div className="label-and-checkbox">
+                    <label className="delete-message-label" htmlFor="confirmDelete">Confirm deletion</label>
+                    <button
+                        className='small-message-button'
+                        type="submit"
+                        title="Confirm delete message">&#x2713;
+                    </button>
+                </div>
             </form>
             }      
         </div>

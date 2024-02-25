@@ -54,16 +54,19 @@ function ConvosPage() {
 
     return(
         <div className="convos-page section">
-            {conversations && conversations.length === 0 ? <p>No conversations found</p>
-            :
-                conversations.map((convo) => {
-                    return (
-                        <div key={convo._id}>
-                            <button className="convo-button" onClick={() => handleConvo(convo._id)}>{convo.title}</button>
-                        </div>
-                    )
-                })
-            }
+            <h1 className='convos-heading'>User Convos</h1>
+            <div className="current-convos">
+                {conversations && conversations.length === 0 ? <p>No conversations found</p>
+                :
+                    conversations.map((convo) => {
+                        return (
+                            <div key={convo._id}>
+                                <button className="convo-button" onClick={() => handleConvo(convo._id)}>{convo.title}</button>
+                            </div>
+                        )
+                    })
+                }
+            </div>
             <br></br>
             <div className='new-convo-section'>
                 <button className="new-convo-button" onClick={handleNewConvo}>New Conversation</button>

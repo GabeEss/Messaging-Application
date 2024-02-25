@@ -4,7 +4,19 @@ body {
     display: flex;
     flex-direction: row;
     margin: 1em;
+    flex-grow: 1;
     /* border: 1em solid #000; */
+}
+
+#root{
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    margin-right: 2em;
+    /* border: 1em solid #000; */
+
 }
 
 h1 {
@@ -100,7 +112,9 @@ button:hover {
 }
 
 .sidebar {
-    margin-right: 2em;
+    margin-right: 2.2em;
+    display: flex;
+    flex-shrink: 1;
     /* border: 1em solid #000; */
 }
 
@@ -117,7 +131,7 @@ button:hover {
     position: fixed;
     top: 0;
     left: 0;
-    padding: 10px;
+    padding: .7em;
     z-index: 999;
     opacity: 1;
     transition: background-color 0.3s ease;
@@ -127,9 +141,35 @@ button:hover {
     background-color: #f0f0f0;
 }
 
+@media screen and (max-width: 600px) {
+    body {
+        margin: 0em;
+    }
+    .sidebar {
+        margin-right: 0em;
+        width: 100%;
+        position: fixed;
+        bottom: 0;
+        right: 0;
+        z-index: 1000;
+    }
+    .sidebar-item {
+        position: fixed;
+        top: 0;
+        left: auto;
+        right: 0;
+        bottom: auto;
+        padding: .8em;
+        z-index: 999;
+        opacity: 0.6;
+        transition: background-color 0.3s ease;
+    }
+}
+
   .main-display {
     display: flex;
-    flex-direction: column;
+    width: 100%;
+    /* flex-direction: column; */
     margin: 0em;
     padding: 0em;
     /* border: 1em solid #000; */
@@ -142,8 +182,31 @@ button:hover {
     background-color: #fff;
     border-radius: .3125em;
     box-shadow: 0 0 .3125em 0 rgba(0, 0, 0, 0.1);
+    flex-shrink: 1;
     flex-grow: 1;
     /* border: 1em solid #000; */
+}
+
+.convo-page {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    padding: 1em;
+    /* border: 1em solid #000; */
+}
+
+.my-modal {
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background-color: #fff;
+    border-radius: .3125em;
+    box-shadow: 0 0 .3125em 0 rgba(0, 0, 0, 0.1);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
 .login-heading {
@@ -183,9 +246,44 @@ button:hover {
     display: flex;
     flex-direction: column;
     justify-content:flex-start;
-    align-items:flex-start;
+    align-items:center;
     flex-wrap: wrap;
     /* border: .1em solid #000; */
+}
+
+.friend-form-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: .5em;
+    /* border: 1em solid #000; */
+}
+
+.friend-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: .5em;
+    /* border: 1em solid #000; */
+}
+
+.action-section {
+    margin: .5em;
+    /* border: 1em solid #000; */
+}
+
+.username-label {
+    margin: .5em;
+    font-size: 1em;
+}
+
+.username-input {
+    margin: .5em;
+    padding: .5em;
+    font-size: 1em;
+    border: .1em solid #ccc;
+    border-radius: .2em;
 }
 
 .users-label {
@@ -197,4 +295,180 @@ button:hover {
     margin: .4em; 
     border: .01em solid rgba(0, 0, 0, 0.1);
     border-radius: .4em; 
+    max-width: 14em;
+}
+
+.convos-page {
+    display: flex;
+    flex-direction: column;
+    /* border: 1em solid #000; */
+}
+
+.current-convos {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: .8em; 
+    border: .01em solid rgba(0, 0, 0, 0.1);
+    border-radius: .4em; 
+    /* border: 1em solid #000; */
+}
+
+.new-convo-section {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+
+.convo-date {
+    font-size: .8em;
+    margin: 0em;
+    padding-left: .5em;
+
+}
+
+.message-container {
+    display: flex;
+    flex-direction: column;
+    background-color: #e0ffd2;
+    border-radius: .3125em;
+    box-shadow: 0 0 .3125em 0 rgba(0, 0, 0, 0.1);
+    margin: .6em;
+    padding-bottom: .1em;
+    padding-left: .3em;
+    padding-right: .3em;
+    max-width: 40em;
+    flex-shrink: 1;
+}
+
+.message-owner {
+    display: flex;
+    flex-direction: row;
+    justify-content:flex-end;
+    font-size: .8em;
+    margin: 0em;
+
+}
+
+.message-date {
+    font-size: .8em;
+    margin: 0em;
+    padding-right: .5em;
+}
+
+.sender {
+    background-color: rgb(111, 217, 62); 
+}
+
+.edit-delete-buttons {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: flex-end;
+}
+
+.small-message-button {
+    margin: .1em;
+    padding: .1em .2em;
+}
+
+.send-message-form {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin: .5em;
+    /* border: 1em solid #000; */
+
+}
+
+.message-input {
+    max-height: 4em;
+    padding: 1em;
+    font-size: 1em;
+    border: .1em solid #ccc;
+    border-radius: .2em;
+    resize: vertical;
+}
+
+.create-button {
+    margin-left: 0em;
+}
+
+.submit-warning-section {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin: .5em;
+    margin-left: 0em;
+    /* border: 1em solid #000; */
+}
+
+.warning{
+    font-size: .8em;
+    margin: 0em;
+    padding-right: .5em;
+}
+
+.label-and-checkbox {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: center;
+    margin: .6em;
+    /* border: 1em solid #000; */
+}
+
+.delete-message-label {
+    margin-bottom: .8em;
+    font-size: .9em; 
+    padding: .5em;
+}
+
+.title-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: .5em;
+    /* border: 1em solid #000; */
+
+}
+
+.title-input {
+    margin: .5em;
+    padding: .5em;
+    font-size: 1em;
+    border: .1em solid #ccc;
+    border-radius: .2em;
+}
+
+.note {
+    font-size: .8em;
+    margin: 0em;
+    padding-left: .5em;
+}
+
+.delete-convo-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: .5em;
+    /* border: 1em solid #000; */
+}
+
+.change-info-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: .5em;
+    /* border: 1em solid #000; */
+}
+
+.delete-form {
+    margin: .5em;
+    /* border: 1em solid #000; */
 }

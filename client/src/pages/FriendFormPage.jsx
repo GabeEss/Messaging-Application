@@ -44,7 +44,7 @@ function FriendForm() {
     };
 
     return (
-        <div className='friend-form-page'>
+        <div className='friend-form-page section'>
             <h1 className='form-heading'>Add/Remove Friend</h1>
             <form className='friend-form' onSubmit={handleSubmit}>
                 <label className='username-label' htmlFor="username">Username (email)</label>
@@ -54,6 +54,7 @@ function FriendForm() {
                     id="username"
                     value={username}
                     onChange={handleUsernameChange}
+                    maxLength={64}
                 />
                 <div className='action-section'>
                     <input

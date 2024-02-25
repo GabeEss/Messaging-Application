@@ -59,7 +59,7 @@ function ChangeInfoFormPage() {
                 <button className='cancel-button' onClick={handleCancel}>Cancel</button>
             </div>
         </form>        
-        <p className='change-info-note'>This will not change your name from prior messages. Max 16 characters.</p>
+        <p className='change-info-note note'>This will not change your name from prior messages. Max 16 characters.</p>
     </div>
   );
 }

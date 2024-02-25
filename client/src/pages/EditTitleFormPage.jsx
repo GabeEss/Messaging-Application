@@ -42,10 +42,9 @@ function EditTitleFormPage() {
     }
 
     return(
-        <div className='title-form-page'>
+        <div className='title-form-page section'>
             <h1 className='form-heading'>Edit Title</h1>
             <form className="title-form" onSubmit={handleEdit}>
-                <label className='title-label' htmlFor="title">Title</label>
                 <input 
                     className='title-input'
                     type="text"
@@ -54,9 +53,11 @@ function EditTitleFormPage() {
                     onChange={handleTitleChange}
                     maxLength={16}>
                 </input>
-                <p>16 characters maximum.</p>
-                <button className='cancel-button' onClick={handleCancel}>Cancel</button>
-                <button className="confirm-button" type='submit'>Save Change</button>
+                <p className='edit-title-note note'>16 characters maximum.</p>
+                <div className='form-buttons'>
+                    <button className='cancel-button' onClick={handleCancel}>Cancel</button>
+                    <button className="confirm-button" type='submit'>Save Change</button>
+                </div>
             </form>
         </div>
     )

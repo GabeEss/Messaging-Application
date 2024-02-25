@@ -102,7 +102,7 @@ function ConvoPage() {
     return(
         <div className="convo-page section">
             {convoTitle ? <h1 className='convo-title'>{convoTitle}</h1> : <h1 className='no-title'>No title</h1>}
-            {convoDate ? <p className='convo-date'>{convoDate}</p> : <p className="no-date">No date</p>}
+            {convoDate ? <p className='convo-date'>{'Created at: ' + new Date(convoDate).toLocaleDateString() + ' at ' + new Date(convoDate).toLocaleTimeString()}</p> : <p className="no-date">No date</p>}
             {convoOwner ? <button className='add-remove-button' onClick={addRemoveUser}>Add/Remove a User</button> : null}
             {convoOwner ? <button className='delete-convo-button' onClick={handleDelete}>Delete Convo</button> : null}
             {notOwner ? <button className='leave-convo-button' onClick={leaveConvo}>Leave Convo</button> : null}

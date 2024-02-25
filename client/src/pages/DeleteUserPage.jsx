@@ -48,17 +48,22 @@ function DeleteUserPage() {
             :
             <div className='delete-section'> 
                 <form className='delete-form' onSubmit={handleSubmit}>
-                    <label className="confirm-label" htmlFor="confirmDelete">Confirm deletion</label>
-                    <input className="confirm-input" type='checkbox' id='confirmDelete' required />
+                    <div className='label-and-checkbox'>
+                        <label className="confirm-label" htmlFor="confirmDelete">Confirm deletion</label>
+                        <input className="confirm-input" type='checkbox' id='confirmDelete' required />
+                    </div>
+                    
                     <div className='form-buttons'>
                         <button className='confirm-button' type="submit">Delete</button>
                         <button className='cancel-button' onClick={() => navigate('/user')}>Cancel</button>
                     </div>
                 </form>
                 <br />
-                <p className='delete-warning'>You are about to delete your profile on Messaging Application.</p>
-                <p className='delete-note'>This will not delete your auth0 account; in other words, you can still login with the same email and password and a new account will be created.</p>
-                
+                <div className='warnings-section'>
+                    <p className='delete-warning note'>You are about to delete your profile on Messaging Application.</p>
+                    <br />
+                    <p className='delete-note note'>This will not delete your auth0 account; in other words, you can still login with the same email and password and a new account will be created.</p>
+                </div>
             </div>
             }    
         </div>

@@ -35,11 +35,14 @@ function DeleteConvo() {
     }
 
     return(
-        <div className="delete-convo-page">
+        <div className="delete-convo-page section">
             <h1 className="delete-convo-heading">Delete Convo</h1>
-            <p className='delete-warning'>Are you sure you want to delete this conversation?</p>
-            <button className="confirm-button" onClick={handleDelete}>Delete</button>
-            <button className="cancel-button" onClick={handleReturn}>Cancel</button>
+            <p className='delete-warning note'>Are you sure you want to delete this conversation?</p>
+            <div className='form-buttons'>
+                <button className="confirm-button" onClick={handleDelete}>Delete</button>
+                <button className="cancel-button" onClick={handleReturn}>Cancel</button>
+            </div>
+            
         </div>
     )
 }

@@ -47,20 +47,22 @@ function EditMessageComponent ({ messageId, messageText, onEditDone }) {
 
     return (
         <div className='edit-popup'>
-            <h1 className='edit-message-heading'>Edit Message</h1>
             {isLoading ? <h1 className='loading-heading'>Loading...</h1> 
             : 
             <form className='edit-message-form' onSubmit={handleSubmit}>
-                <label className='message-label' htmlFor="message">Message</label>
-                <input 
+                <textarea 
                     className='message-input'
-                    type="text"
                     id="message"
                     value={message}
                     onChange={handleTextChange}
                     maxLength={60}
                 />
-                <button className='confirm-button' type="submit">Edit</button>
+                <div className='edit-delete-buttons'>
+                    <button
+                    className='small-message-button'
+                    type="submit"
+                    title="Confirm edit message">{'\u270E'}</button>
+                </div>
             </form>
             }      
         </div>

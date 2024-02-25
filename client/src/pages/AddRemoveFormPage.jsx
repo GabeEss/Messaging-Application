@@ -44,7 +44,7 @@ function AddRemoveForm() {
     }
 
     return (
-        <div className='add-remove-form-page'>
+        <div className='add-remove-form-page section'>
             <h1 className='add-remove-heading'>Add/Remove Friend from Convo</h1>
             <form className="add-remove-form" onSubmit={handleSubmit}>
                 <label className='username-label' htmlFor="username">Username (email)</label>
@@ -54,6 +54,7 @@ function AddRemoveForm() {
                     id="username"
                     value={username}
                     onChange={handleUsernameChange}
+                    maxLength={64}
                 />
                 <div className='action-section'>
                     <input
@@ -77,7 +78,10 @@ function AddRemoveForm() {
                     />
                     <label className='remove-action-label' htmlFor="remove">Remove Friend</label>
                 </div>
-                <button className='confirm-button' type="submit">Confirm</button>
+                <div className="form-buttons">
+                    <button className='confirm-button' type="submit">Confirm</button>
+                    <button className='cancel-button' onClick={() => navigate(`/convo/${id}`)}>Cancel</button>
+                </div>
             </form>
         </div>
     )
